@@ -18,7 +18,7 @@ public class EmbeddingController(private val client: OpenAiClient) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
-        val body = response.body<OpenAiResponse<List<EmbeddingInfo>>>()
+        val body = response.body<ListWrapper<EmbeddingInfo>>()
 
         return body.data
     }

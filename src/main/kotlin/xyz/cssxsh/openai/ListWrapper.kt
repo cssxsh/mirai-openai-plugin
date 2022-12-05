@@ -4,9 +4,11 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
 @Serializable
-internal data class OpenAiResponse<T : Any>(
+internal data class ListWrapper<T : Any>(
     @SerialName("data")
-    val data: T,
+    val data: List<T>,
+    @SerialName("usage")
+    val usage: Usage = Usage(),
     @SerialName("object")
     val type: String
 )

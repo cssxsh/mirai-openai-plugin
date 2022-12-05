@@ -14,7 +14,7 @@ public class ModelController(private val client: OpenAiClient) {
      */
     public suspend fun list(): List<ModelInfo> {
         val response = client.http.get( "https://api.openai.com/v1/models")
-        val body = response.body<OpenAiResponse<List<ModelInfo>>>()
+        val body = response.body<ListWrapper<ModelInfo>>()
 
         return body.data
     }

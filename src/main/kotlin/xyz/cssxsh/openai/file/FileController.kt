@@ -17,7 +17,7 @@ public class FileController(private val client: OpenAiClient) {
      */
     public suspend fun list(): List<FileInfo> {
         val response = client.http.get( "https://api.openai.com/v1/files")
-        val body = response.body<OpenAiResponse<List<FileInfo>>>()
+        val body = response.body<ListWrapper<FileInfo>>()
 
         return body.data
     }
