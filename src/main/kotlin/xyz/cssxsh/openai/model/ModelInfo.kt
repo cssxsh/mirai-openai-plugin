@@ -18,5 +18,7 @@ public data class ModelInfo(
     @SerialName("root")
     val root: String? = null,
     @SerialName("parent")
-    val parent: String? = null
+    val parent: String? = null,
+    @SerialName("deleted")
+    val deleted: Boolean = false
 )

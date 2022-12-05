@@ -16,7 +16,7 @@ public class FileController(private val client: OpenAiClient) {
      * [List files](https://beta.openai.com/docs/api-reference/files/list)
      */
     public suspend fun list(): List<FileInfo> {
-        val response = client.http.get( "https://api.openai.com/v1/files")
+        val response = client.http.get("https://api.openai.com/v1/files")
         val body = response.body<ListWrapper<FileInfo>>()
 
         return body.data
@@ -26,7 +26,7 @@ public class FileController(private val client: OpenAiClient) {
      * [Upload file](https://beta.openai.com/docs/api-reference/files/upload)
      */
     public suspend fun create(file: InputProvider, purpose: String): FileInfo {
-        val response = client.http.submitFormWithBinaryData( "https://api.openai.com/v1/files", formData {
+        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/files", formData {
             append("file", file)
             append("purpose", purpose)
         })

@@ -15,6 +15,14 @@ import okhttp3.Dns
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.dnsoverhttps.DnsOverHttps
+import xyz.cssxsh.openai.completion.*
+import xyz.cssxsh.openai.edit.*
+import xyz.cssxsh.openai.embedding.*
+import xyz.cssxsh.openai.file.*
+import xyz.cssxsh.openai.finetune.*
+import xyz.cssxsh.openai.image.*
+import xyz.cssxsh.openai.model.*
+import xyz.cssxsh.openai.moderation.*
 import java.net.*
 
 public open class OpenAiClient(internal val config: OpenAiClientConfig) {
@@ -26,20 +34,6 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
             socketTimeoutMillis = config.timeout
             connectTimeoutMillis = config.timeout
             requestTimeoutMillis = null
-        }
-        HttpResponseValidator {
-            validateResponse { response ->
-//                when (response.status) {
-//                    HttpStatusCode.BadRequest -> throw NovelAiApiException(error = response.body())
-//                    HttpStatusCode.Unauthorized -> throw NovelAiApiException(error = response.body())
-//                    HttpStatusCode.PaymentRequired -> throw NovelAiApiException(error = response.body())
-//                    HttpStatusCode.NotFound -> throw NovelAiApiException(error = response.body())
-//                    HttpStatusCode.Conflict -> throw NovelAiApiException(error = response.body())
-//                    HttpStatusCode.InternalServerError -> throw NovelAiApiException(error = response.body())
-//                }
-                if (response.status.value in 400..499) throw ClientRequestException(response, response.body())
-                if (response.status.value in 500..599) throw ServerResponseException(response, response.body())
-            }
         }
         Auth {
             bearer {
@@ -91,4 +85,12 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
             }
         }
     }
+    public open val model: ModelController by lazy { ModelController(this) }
+    public open val completion: CompletionController by lazy { CompletionController(this) }
+    public open val edit: EditController by lazy { EditController(this) }
+    public open val image: ImageController by lazy { ImageController(this) }
+    public open val embedding: EmbeddingController by lazy { EmbeddingController(this) }
+    public open val file: FileController by lazy { FileController(this) }
+    public open val finetune: FineTuneController by lazy { FineTuneController(this) }
+    public open val moderation: ModerationController by lazy { ModerationController(this) }
 }
