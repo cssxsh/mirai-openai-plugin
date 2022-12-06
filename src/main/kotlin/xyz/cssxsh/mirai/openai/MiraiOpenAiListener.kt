@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.message.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import net.mamoe.mirai.utils.*
@@ -59,6 +60,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             content.startsWith(MiraiOpenAiConfig.completion) -> completion(event = this)
             content.startsWith(MiraiOpenAiConfig.image) -> image(event = this)
             content.startsWith(MiraiOpenAiConfig.chat) -> chat(event = this)
+            content.startsWith(MiraiOpenAiConfig.question) -> question(event = this)
             else -> return
         }
 
@@ -106,7 +108,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             val buffer: MutableList<String> = ArrayList()
             buffer.add(prompt)
             while (isActive) {
-                val next = event.nextMessage(10_000L).contentToString()
+                val next = event.nextMessage(ChatConfig.timeout).contentToString()
                 buffer.add("Human: $next")
                 buffer.add("AI:")
 
@@ -126,6 +128,35 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         }
 
         return "聊天将开始".toPlainText()
+    }
+
+    private suspend fun question(event: MessageEvent): Message {
+        val prompt = event.message.contentToString()
+            .removePrefix(MiraiOpenAiConfig.question)
+        launch {
+            val buffer: MutableList<String> = ArrayList()
+            buffer.add(prompt)
+            while (isActive) {
+                val next = event.nextMessage(QuestionConfig.timeout).contentToString()
+                buffer.add("Q: $next")
+                buffer.add("A:")
+
+                val completion = client.completion.create(model = "text-davinci-003") {
+                    prompt(buffer)
+                    user(event.senderName)
+                    QuestionConfig.push(this)
+                    stop("\n")
+                }
+                val reply = completion.choices.first().text
+                launch {
+                    event.subject.sendMessage(reply)
+                }
+                buffer.removeLast()
+                buffer.add("A: $reply")
+            }
+        }
+
+        return "问答将开始".toPlainText()
     }
 
     private suspend fun store(item: ImageInfo.Data, folder: File): File {

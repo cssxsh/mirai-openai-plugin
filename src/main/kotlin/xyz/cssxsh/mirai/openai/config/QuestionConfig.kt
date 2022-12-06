@@ -4,11 +4,11 @@ import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.openai.completion.*
 
 @PublishedApi
-internal object ChatConfig : ReadOnlyPluginConfig("chat") {
+internal object QuestionConfig : ReadOnlyPluginConfig("question") {
 
     @ValueName("timeout")
     @ValueDescription("等待超时时间")
-    val timeout: Long by value(180_000L)
+    val timeout: Long by value(60_000L)
 
     @ValueName("model")
     @ValueDescription("Model")
@@ -20,7 +20,7 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
 
     @ValueName("temperature")
     @ValueDescription("Temperature")
-    val temperature: Double by value(0.9)
+    val temperature: Double by value(0.0)
 
     @ValueName("top_p")
     @ValueDescription("Top P")
@@ -28,7 +28,7 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
 
     @ValueName("presence_penalty")
     @ValueDescription("Presence Penalty")
-    val presencePenalty: Double by value(0.6)
+    val presencePenalty: Double by value(0.0)
 
     @ValueName("frequency_penalty")
     @ValueDescription("Frequency Penalty")
