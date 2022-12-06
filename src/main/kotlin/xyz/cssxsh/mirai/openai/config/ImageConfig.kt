@@ -1,11 +1,16 @@
 package xyz.cssxsh.mirai.openai.config
 
+import kotlinx.serialization.modules.*
 import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.openai.completion.*
 import xyz.cssxsh.openai.image.*
 
 @PublishedApi
 internal object ImageConfig : ReadOnlyPluginConfig("image") {
+
+    override val serializersModule: SerializersModule = SerializersModule {
+        contextual(ImageSize.Serializer)
+    }
 
     @ValueName("n")
     val number: Int by value(1)

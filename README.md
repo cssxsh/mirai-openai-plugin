@@ -20,9 +20,11 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
 *   `completion_prefix` 问答触发前缀, 默认 `> `
 *   `image_prefix` 图片生成触发前缀, 默认 `? `
 *   `token` [OPENAI_TOKEN](https://beta.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用编辑文件
+*   `error_reply` 发生错误时回复用户，默认 `true`
 
 `completion.yml`
 
+*   `model` 模型
 *   `max_tokens` 回答长度
 
 `image.yml`
@@ -34,6 +36,10 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
 ### 注册
 
 <https://zhuanlan.zhihu.com/p/589287744>
+
+### 测试
+
+<https://beta.openai.com/playground>
 
 ## 安装
 

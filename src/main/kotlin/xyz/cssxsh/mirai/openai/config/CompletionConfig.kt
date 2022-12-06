@@ -6,6 +6,9 @@ import xyz.cssxsh.openai.completion.*
 @PublishedApi
 internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
 
+    @ValueName("model")
+    val model: String by value("text-davinci-003")
+
     @ValueName("suffix")
     val suffix: String by value()
 
@@ -40,6 +43,7 @@ internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
     val logitBias: Map<String, Int> by value()
 
     fun push(builder: CompletionRequest.Builder) {
+        builder.model = model
         if (suffix.isNotEmpty()) builder.suffix = suffix
         builder.maxTokens = maxTokens
         builder.temperature = temperature
