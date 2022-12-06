@@ -32,6 +32,14 @@ dependencies {
     testImplementation("net.mamoe:mirai-mock")
     testImplementation("net.mamoe:mirai-logging-slf4j")
     //
+    implementation(platform("io.ktor:ktor-bom:2.1.3"))
+    implementation("io.ktor:ktor-client-okhttp")
+    implementation("io.ktor:ktor-client-auth")
+    implementation("io.ktor:ktor-client-encoding")
+    implementation("io.ktor:ktor-client-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:4.10.0")
+    //
     implementation(platform("org.slf4j:slf4j-parent:2.0.5"))
     testImplementation("org.slf4j:slf4j-simple")
 }
