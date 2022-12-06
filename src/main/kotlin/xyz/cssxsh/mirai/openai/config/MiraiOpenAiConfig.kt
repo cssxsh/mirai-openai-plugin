@@ -36,6 +36,9 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("question_prefix")
     val question: String by value("Q&A")
 
+    @ValueName("stop")
+    val stop: String by value("stop")
+
     @ValueName("image_folder")
     val folder: String by value("run")
 }

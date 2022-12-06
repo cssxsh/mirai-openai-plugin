@@ -15,7 +15,7 @@ internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
 
     @ValueName("max_tokens")
     @ValueDescription("Maximum length")
-    val maxTokens: Int by value(256)
+    val maxTokens: Int by value(1024)
 
     @ValueName("temperature")
     @ValueDescription("Temperature")

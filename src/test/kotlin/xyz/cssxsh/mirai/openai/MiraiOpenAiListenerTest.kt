@@ -8,7 +8,7 @@ import org.junit.jupiter.api.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MiraiOpenAiListenerTest {
     init {
-        System.setProperty("org.slf4j.simpleLogger.log.xyz", "DEBUG")
+        System.setProperty("org.slf4j.simpleLogger.log.xyz", "TRACE")
         System.setProperty("org.slf4j.simpleLogger.log.net.mamoe", "TRACE")
         MiraiOpenAiListener.registerTo(GlobalEventChannel)
     }
@@ -34,7 +34,7 @@ internal class MiraiOpenAiListenerTest {
     fun question(): Unit = runBlocking {
         questioner.says("Q&A")
         delay(1_000)
-        questioner.says("Rust是什么")
+        questioner.says("Rust是什么?")
     }
 
     @AfterAll
