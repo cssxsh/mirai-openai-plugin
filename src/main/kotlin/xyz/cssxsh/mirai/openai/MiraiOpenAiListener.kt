@@ -84,7 +84,8 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.image)
         val result = client.image.create(prompt = prompt) {
-            // number(3)
+            user(event.senderName)
+            ImageConfig.push(this)
         }
 
         return buildMessageChain {
