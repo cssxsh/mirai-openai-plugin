@@ -19,8 +19,6 @@ internal object ImageConfig : ReadOnlyPluginConfig("image") {
     fun push(builder: ImageRequest.Builder) {
         builder.number = number
         builder.size = size
-        builder.number = number
-        builder.size = size
         builder.format = format
     }
 }

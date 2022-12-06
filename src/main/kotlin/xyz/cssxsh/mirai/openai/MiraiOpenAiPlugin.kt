@@ -14,7 +14,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-openai-plugin",
         name = "mirai-openai-plugin",
-        version = "1.0.0",
+        version = "1.0.1",
     ) {
         author("cssxsh")
     }
@@ -22,6 +22,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     override fun onEnable() {
         MiraiOpenAiConfig.reload()
         CompletionConfig.reload()
+        ImageConfig.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
             val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OPENAI_TOKEN") }
