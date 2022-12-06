@@ -1,0 +1,36 @@
+name: OpenAiClient Test
+on: [ push, pull_request ]
+
+jobs:
+  check:
+    environment: OPENAI
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: chmod -R 777 *
+        run: chmod -R 777 *
+
+      - name: Init gradle project
+        run: ./gradlew clean --scan
+
+      - name: Build all
+        run: ./gradlew assemble --scan
+
+      - name: OpenAiClientTest
+        run: ./gradlew test --tests "xyz.cssxsh.openai.OpenAiClientTest" --scan --info
+        env:
+          OPENAI_TOKEN: ${{ secrets.OPENAI_TOKEN }}
+
+      - name: MiraiOpenAiListenerTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.openai.MiraiOpenAiListenerTest" --scan --info
+        env:
+          OPENAI_TOKEN: ${{ secrets.OPENAI_TOKEN }}
