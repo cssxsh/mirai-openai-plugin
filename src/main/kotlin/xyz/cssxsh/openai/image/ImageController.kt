@@ -3,9 +3,7 @@ package xyz.cssxsh.openai.image
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
@@ -21,10 +19,8 @@ public class ImageController(private val client: OpenAiClient) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
-        val test = response.bodyAsText()
-        println(test)
 
-        return kotlinx.serialization.json.Json.decodeFromString(test)
+        return response.body()
     }
 
     /**
