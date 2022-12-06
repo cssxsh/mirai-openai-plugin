@@ -1,6 +1,7 @@
 package xyz.cssxsh.openai.finetune
 
 import kotlinx.serialization.*
+import xyz.cssxsh.openai.*
 
 /**
  * @param trainingFile [create-training_file](https://beta.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-training_file)
@@ -42,4 +43,105 @@ public data class FineTuneRequest(
     val classificationBetas: String? = null,
     @SerialName("suffix")
     val suffix: String? = null
-)
+) {
+    public class Builder(@property:OpenAiDsl public var trainingFile: String) {
+        @OpenAiDsl
+        public fun trainingFile(value: String): Builder = apply {
+            trainingFile = value
+        }
+
+        @OpenAiDsl
+        public var validationFile: String = ""
+        @OpenAiDsl
+        public fun validationFile(value: String): Builder = apply {
+            validationFile = value
+        }
+
+        @OpenAiDsl
+        public var model: String = "curie"
+        @OpenAiDsl
+        public fun model(value: String): Builder = apply {
+            model = value
+        }
+
+        @OpenAiDsl
+        public var nEpochs: Int = 4
+        @OpenAiDsl
+        public fun nEpochs(value: Int): Builder = apply {
+            nEpochs = value
+        }
+
+        @OpenAiDsl
+        public var batchSize: Int? = null
+        @OpenAiDsl
+        public fun batchSize(value: Int): Builder = apply {
+            batchSize = value
+        }
+
+        @OpenAiDsl
+        public var learningRateMultiplier: Double? = null
+        @OpenAiDsl
+        public fun learningRateMultiplier(value: Double): Builder = apply {
+            learningRateMultiplier = value
+        }
+
+        @OpenAiDsl
+        public var promptLossWeight: Double = 0.01
+        @OpenAiDsl
+        public fun promptLossWeight(value: Double): Builder = apply {
+            promptLossWeight = value
+        }
+
+        @OpenAiDsl
+        public var computeClassificationMetrics: Boolean = false
+        @OpenAiDsl
+        public fun computeClassificationMetrics(value: Boolean): Builder = apply {
+            computeClassificationMetrics = value
+        }
+
+        @OpenAiDsl
+        public var classificationNClasses: Int? = null
+        @OpenAiDsl
+        public fun classificationNClasses(value: Int): Builder = apply {
+            classificationNClasses = value
+        }
+
+        @OpenAiDsl
+        public var classificationPositiveClass: String? = null
+        @OpenAiDsl
+        public fun classificationPositiveClass(value: String): Builder = apply {
+            classificationPositiveClass = value
+        }
+
+        @OpenAiDsl
+        public var classificationBetas: String? = null
+        @OpenAiDsl
+        public fun classificationBetas(value: String): Builder = apply {
+            classificationBetas = value
+        }
+
+        @OpenAiDsl
+        private var suffix: String? = null
+        @OpenAiDsl
+        public fun suffix(value: String): Builder = apply {
+            suffix = value
+        }
+
+        public fun build(): FineTuneRequest {
+            return FineTuneRequest(
+                trainingFile = trainingFile,
+                validationFile = validationFile,
+                model = model,
+                nEpochs = nEpochs,
+                batchSize = batchSize,
+                learningRateMultiplier = learningRateMultiplier,
+                promptLossWeight = promptLossWeight,
+                computeClassificationMetrics = computeClassificationMetrics,
+                classificationNClasses = classificationNClasses,
+                classificationPositiveClass = classificationPositiveClass,
+                classificationBetas = classificationBetas,
+                suffix = suffix
+            )
+        }
+    }
+}

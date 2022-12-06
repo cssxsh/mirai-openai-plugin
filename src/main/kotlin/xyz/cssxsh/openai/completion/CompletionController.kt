@@ -21,4 +21,11 @@ public class CompletionController(private val client: OpenAiClient) {
 
         return response.body()
     }
+
+    /**
+     * [Create completion](https://beta.openai.com/docs/api-reference/completions/create#completions/create)
+     */
+    public suspend fun create(model: String, block: CompletionRequest.Builder.() -> Unit): CompletionInfo {
+        return create(request = CompletionRequest.Builder(model = model).apply(block).build())
+    }
 }

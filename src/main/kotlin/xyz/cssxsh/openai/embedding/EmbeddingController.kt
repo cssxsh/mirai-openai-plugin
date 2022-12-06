@@ -22,4 +22,11 @@ public class EmbeddingController(private val client: OpenAiClient) {
 
         return body.data
     }
+
+    /**
+     * [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+     */
+    public suspend fun create(model: String, block: EmbeddingRequest.Builder.() -> Unit): List<EmbeddingInfo> {
+        return create(request = EmbeddingRequest.Builder(model = model).apply(block).build())
+    }
 }

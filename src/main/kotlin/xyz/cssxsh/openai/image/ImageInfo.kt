@@ -12,6 +12,8 @@ public data class ImageInfo(
     @Serializable
     public data class Data(
         @SerialName("url")
-        val url: String = ""
+        val url: String = "",
+        @SerialName("b64_json")
+        val base64: String = ""
     )
 }

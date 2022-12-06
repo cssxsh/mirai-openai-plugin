@@ -21,4 +21,11 @@ public class EditController(private val client: OpenAiClient) {
 
         return response.body()
     }
+
+    /**
+     * [Create edit](https://beta.openai.com/docs/api-reference/edits/create)
+     */
+    public suspend fun create(model: String, block: EditRequest.Builder.() -> Unit): EditInfo {
+        return create(request = EditRequest.Builder(model = model).apply(block).build())
+    }
 }

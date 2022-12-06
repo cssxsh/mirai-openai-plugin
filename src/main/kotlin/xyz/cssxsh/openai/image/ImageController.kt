@@ -3,7 +3,9 @@ package xyz.cssxsh.openai.image
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
@@ -19,8 +21,17 @@ public class ImageController(private val client: OpenAiClient) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
+        val test = response.bodyAsText()
+        println(test)
 
-        return response.body()
+        return kotlinx.serialization.json.Json.decodeFromString(test)
+    }
+
+    /**
+     * [Create image](https://beta.openai.com/docs/api-reference/images/create)
+     */
+    public suspend fun create(prompt: String, block: ImageRequest.Builder.() -> Unit): ImageInfo {
+        return create(request = ImageRequest.Builder(prompt = prompt).apply(block).build())
     }
 
     /**
@@ -31,9 +42,40 @@ public class ImageController(private val client: OpenAiClient) {
             append("image", image)
             if (mask != null) append("mask", mask)
             append("prompt", request.prompt)
-            append("n", request.n)
+            append("n", request.number)
             append("size", request.size.text)
-            append("response_format", request.format.name)
+            append("response_format", request.format.name.lowercase())
+            if (request.user.isNotEmpty()) append("user", request.user)
+        })
+
+        return response.body()
+    }
+
+    /**
+     * [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
+     */
+    public suspend fun createEdit(
+        image: InputProvider,
+        mask: InputProvider? = null,
+        prompt: String,
+        block: ImageRequest.Builder.() -> Unit
+    ): ImageInfo {
+        return createEdit(
+            image = image,
+            mask = mask,
+            request = ImageRequest.Builder(prompt = prompt).apply(block).build()
+        )
+    }
+
+    /**
+     * [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
+     */
+    public suspend fun createVariation(image: InputProvider, request: ImageRequest): ImageInfo {
+        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/variations", formData {
+            append("image", image)
+            append("n", request.number)
+            append("size", request.size.text)
+            append("response_format", request.format.name.lowercase())
             if (request.user.isNotEmpty()) append("user", request.user)
         })
 
@@ -43,15 +85,14 @@ public class ImageController(private val client: OpenAiClient) {
     /**
      * [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
      */
-    public suspend fun createVariation(image: InputProvider, request: ImageRequest): ImageInfo {
-        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/variations", formData {
-            append("image", image)
-            append("n", request.n)
-            append("size", request.size.text)
-            append("response_format", request.format.name)
-            if (request.user.isNotEmpty()) append("user", request.user)
-        })
-
-        return response.body()
+    public suspend fun createVariation(
+        image: InputProvider,
+        prompt: String,
+        block: ImageRequest.Builder.() -> Unit
+    ): ImageInfo {
+        return createEdit(
+            image = image,
+            request = ImageRequest.Builder(prompt = prompt).apply(block).build()
+        )
     }
 }
