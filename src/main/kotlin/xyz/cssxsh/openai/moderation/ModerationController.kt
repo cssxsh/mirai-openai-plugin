@@ -21,4 +21,11 @@ public class ModerationController(private val client: OpenAiClient) {
 
         return response.body()
     }
+
+    /**
+     * [Create moderation](https://beta.openai.com/docs/api-reference/moderations/create)
+     */
+    public suspend fun create(input: String, model: String = "text-moderation-latest"): ModerationResult {
+        return create(request = ModerationRequest(input = input, model = model))
+    }
 }
