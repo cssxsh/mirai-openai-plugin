@@ -70,6 +70,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     private suspend fun completion(event: MessageEvent): Message {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.completion)
+
+        logger.verbose { "prompt: $prompt" }
+
         val completion = client.completion.create(model = "text-davinci-003") {
             prompt(prompt)
             user(event.senderName)
@@ -88,6 +91,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     private suspend fun image(event: MessageEvent): Message {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.image)
+
+        logger.verbose { "prompt: $prompt" }
+
         val result = client.image.create(prompt = prompt) {
             user(event.senderName)
             ImageConfig.push(this)
@@ -108,15 +114,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.chat)
         launch {
-            val buffer: MutableList<String> = ArrayList()
-            buffer.add(prompt)
+            val buffer = StringBuffer(prompt)
             while (isActive) {
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, true)
-                buffer.add("Human: ${next.contentToString()}")
-                buffer.add("AI: ")
+                buffer.append("Human: ${next.contentToString()}").append('\n')
+                buffer.append("AI: ")
+
+                logger.verbose { "prompt: $buffer" }
 
                 val completion = client.completion.create(model = "text-davinci-003") {
-                    prompt(buffer)
+                    prompt(buffer.toString())
                     user(event.senderName)
                     ChatConfig.push(this)
                     stop("Human:", "AI:")
@@ -126,8 +133,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 launch {
                     event.subject.sendMessage(next.quote() + reply.removePrefix("\n\n"))
                 }
-                buffer.removeLast()
-                buffer.add("AI: $reply")
+                buffer.append(reply).append('\n')
             }
         }.invokeOnCompletion { cause ->
             logger.debug({ "聊天已终止" }, cause)
@@ -140,15 +146,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.question)
         launch {
-            val buffer: MutableList<String> = ArrayList()
-            buffer.add(prompt)
+            val buffer = StringBuffer(prompt)
             while (isActive) {
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, true)
-                buffer.add("Q: ${next.contentToString()}")
-                buffer.add("A: ")
+                buffer.append("Q: ${next.contentToString()}").append('\n')
+                buffer.append("A: ")
+
+                logger.verbose { "prompt: $buffer" }
 
                 val completion = client.completion.create(model = "text-davinci-003") {
-                    prompt(buffer)
+                    prompt(buffer.toString())
                     user(event.senderName)
                     QuestionConfig.push(this)
                     stop("\n")
@@ -158,8 +165,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 launch {
                     event.subject.sendMessage(next.quote() + reply)
                 }
-                buffer.removeLast()
-                buffer.add("A: $reply")
+                buffer.append(reply).append('\n')
             }
         }.invokeOnCompletion { cause ->
             logger.debug({ "问答已终止" }, cause)
