@@ -35,7 +35,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
 
 ### 注册
 
-<https://zhuanlan.zhihu.com/p/589287744>
+<https://blog.csdn.net/duoshehuan6005/article/details/128184450>
 
 ### 测试
 
