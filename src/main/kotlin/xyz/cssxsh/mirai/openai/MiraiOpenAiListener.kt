@@ -58,6 +58,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val message: Message = when {
             content.startsWith(MiraiOpenAiConfig.completion) -> completion(event = this)
             content.startsWith(MiraiOpenAiConfig.image) -> image(event = this)
+            content.startsWith(MiraiOpenAiConfig.chat) -> chat(event = this)
             else -> return
         }
 
@@ -96,6 +97,35 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 add(image)
             }
         }
+    }
+
+    private suspend fun chat(event: MessageEvent): Message {
+        val prompt = event.message.contentToString()
+            .removePrefix(MiraiOpenAiConfig.chat)
+        launch {
+            val buffer: MutableList<String> = ArrayList()
+            buffer.add(prompt)
+            while (isActive) {
+                val next = event.nextMessage(10_000L).contentToString()
+                buffer.add("Human: $next")
+                buffer.add("AI:")
+
+                val completion = client.completion.create(model = "text-davinci-003") {
+                    prompt(buffer)
+                    user(event.senderName)
+                    ChatConfig.push(this)
+                    stop("Human:", "AI:")
+                }
+                val reply = completion.choices.first().text
+                launch {
+                    event.subject.sendMessage(reply)
+                }
+                buffer.removeLast()
+                buffer.add("AI: $reply")
+            }
+        }
+
+        return "聊天将开始".toPlainText()
     }
 
     private suspend fun store(item: ImageInfo.Data, folder: File): File {

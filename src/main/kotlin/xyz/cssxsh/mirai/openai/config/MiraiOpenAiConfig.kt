@@ -30,6 +30,9 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("image_prefix")
     val image: String by value("? ")
 
+    @ValueName("chat_prefix")
+    val chat: String by value("chat")
+
     @ValueName("image_folder")
     val folder: String by value("run")
 }

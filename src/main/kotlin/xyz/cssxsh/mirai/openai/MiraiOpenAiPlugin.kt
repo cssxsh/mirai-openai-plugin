@@ -14,7 +14,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-openai-plugin",
         name = "mirai-openai-plugin",
-        version = "1.0.2",
+        version = "1.0.3",
     ) {
         author("cssxsh")
     }
@@ -23,6 +23,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         MiraiOpenAiConfig.reload()
         CompletionConfig.reload()
         ImageConfig.reload()
+        ChatConfig.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
             val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OPENAI_TOKEN") }
@@ -30,9 +31,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
             @Suppress("UNCHECKED_CAST")
             val value = MiraiOpenAiConfig.findBackingFieldValue<String>("token") as Value<String>
             value.value = token
-            MiraiOpenAiConfig.save()
         }
-
         if (MiraiOpenAiConfig.folder == "run") {
             @OptIn(ConsoleExperimentalApi::class)
             @Suppress("UNCHECKED_CAST")
@@ -40,8 +39,11 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
             val folder = resolveDataFile("image")
             folder.mkdirs()
             value.value = folder.absolutePath
-            MiraiOpenAiConfig.save()
         }
+        MiraiOpenAiConfig.save()
+        CompletionConfig.save()
+        ImageConfig.save()
+        ChatConfig.save()
 
         MiraiOpenAiListener.registerTo(globalEventChannel())
     }
