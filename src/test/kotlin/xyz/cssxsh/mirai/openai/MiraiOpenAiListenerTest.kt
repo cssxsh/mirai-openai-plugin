@@ -5,17 +5,40 @@ import net.mamoe.mirai.event.*
 import net.mamoe.mirai.mock.*
 import org.junit.jupiter.api.*
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MiraiOpenAiListenerTest {
+    init {
+        System.setProperty("org.slf4j.simpleLogger.log.xyz", "DEBUG")
+        System.setProperty("org.slf4j.simpleLogger.log.net.mamoe", "TRACE")
+        MiraiOpenAiListener.registerTo(GlobalEventChannel)
+    }
     private val bot = MockBotFactory.newMockBotBuilder().create()
     private val group = bot.addGroup(114514, "mock")
     private val sender = group.addMember(1919810, "...")
-
-    init {
-        MiraiOpenAiListener.registerTo(GlobalEventChannel)
-    }
+    private val chatter = group.addMember(12345, "...")
+    private val questioner = group.addMember(7890, "...")
 
     @Test
     fun completions(): Unit = runBlocking {
         sender.says("> 你好")
+    }
+
+    @Test
+    fun chat(): Unit = runBlocking {
+        chatter.says("chat")
+        delay(1_000)
+        chatter.says("你好")
+    }
+
+    @Test
+    fun question(): Unit = runBlocking {
+        questioner.says("Q&A")
+        delay(1_000)
+        questioner.says("Rust是什么")
+    }
+
+    @AfterAll
+    fun cancel(): Unit = runBlocking {
+        MiraiOpenAiListener.cancel()
     }
 }
