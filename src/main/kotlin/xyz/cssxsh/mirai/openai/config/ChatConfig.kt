@@ -7,8 +7,8 @@ import xyz.cssxsh.openai.completion.*
 internal object ChatConfig : ReadOnlyPluginConfig("chat") {
 
     @ValueName("timeout")
-    @ValueDescription("等待超时时间")
-    val timeout: Long by value(180_000L)
+    @ValueDescription("等待停止时间")
+    val timeout: Long by value(60_000L)
 
     @ValueName("model")
     @ValueDescription("Model")

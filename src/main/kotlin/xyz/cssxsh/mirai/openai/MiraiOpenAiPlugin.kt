@@ -19,11 +19,21 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         author("cssxsh")
     }
 ) {
+
+    private val config: List<PluginConfig> by services()
+    private val listeners: List<ListenerHost> by services()
+
+    @Suppress("INVISIBLE_MEMBER")
+    private inline fun <reified T : Any> services(): Lazy<List<T>> = lazy {
+        with(net.mamoe.mirai.console.internal.util.PluginServiceHelper) {
+            jvmPluginClasspath.pluginClassLoader
+                .findServices<T>()
+                .loadAllServices()
+        }
+    }
+
     override fun onEnable() {
-        MiraiOpenAiConfig.reload()
-        CompletionConfig.reload()
-        ImageConfig.reload()
-        ChatConfig.reload()
+        for (config in config) config.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
             val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OPENAI_TOKEN") }
@@ -40,15 +50,12 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
             folder.mkdirs()
             value.value = folder.absolutePath
         }
-        MiraiOpenAiConfig.save()
-        CompletionConfig.save()
-        ImageConfig.save()
-        ChatConfig.save()
+        for (config in config) config.save()
 
-        MiraiOpenAiListener.registerTo(globalEventChannel())
+        for (listener in listeners) (listener as SimpleListenerHost).registerTo(globalEventChannel())
     }
 
     override fun onDisable() {
-        MiraiOpenAiListener.cancel()
+        for (listener in listeners) (listener as SimpleListenerHost).cancel()
     }
 }

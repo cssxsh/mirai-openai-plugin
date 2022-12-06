@@ -7,7 +7,7 @@ import xyz.cssxsh.openai.completion.*
 internal object QuestionConfig : ReadOnlyPluginConfig("question") {
 
     @ValueName("timeout")
-    @ValueDescription("等待超时时间")
+    @ValueDescription("等待停止时间")
     val timeout: Long by value(60_000L)
 
     @ValueName("model")

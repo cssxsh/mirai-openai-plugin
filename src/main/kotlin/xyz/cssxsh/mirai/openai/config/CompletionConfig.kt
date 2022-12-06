@@ -7,18 +7,22 @@ import xyz.cssxsh.openai.completion.*
 internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
 
     @ValueName("model")
+    @ValueDescription("Model")
     val model: String by value("text-davinci-003")
 
     @ValueName("suffix")
     val suffix: String by value()
 
     @ValueName("max_tokens")
+    @ValueDescription("Maximum length")
     val maxTokens: Int by value(256)
 
     @ValueName("temperature")
+    @ValueDescription("Temperature")
     val temperature: Double by value(1.0)
 
     @ValueName("top_p")
+    @ValueDescription("Top P")
     val topP: Double by value(1.0)
 
     @ValueName("n")
@@ -28,15 +32,19 @@ internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
     val echo: Boolean by value(false)
 
     @ValueName("stop")
+    @ValueDescription("Stop sequences")
     val stop: List<String> by value()
 
     @ValueName("presence_penalty")
+    @ValueDescription("Presence Penalty")
     val presencePenalty: Double by value(0.0)
 
     @ValueName("frequency_penalty")
+    @ValueDescription("Frequency Penalty")
     val frequencyPenalty: Double by value(0.0)
 
     @ValueName("best_of")
+    @ValueDescription("Best of")
     val bestOf: Int by value(1)
 
     @ValueName("logit_bias")
