@@ -70,7 +70,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val completion = client.completion.create(model = "text-davinci-003") {
             prompt(prompt)
             user(event.senderName)
-            maxTokens(256)
+            CompletionConfig.push(this)
         }
 
         return buildMessageChain {

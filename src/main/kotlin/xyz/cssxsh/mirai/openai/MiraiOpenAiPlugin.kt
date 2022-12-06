@@ -21,6 +21,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
 ) {
     override fun onEnable() {
         MiraiOpenAiConfig.reload()
+        CompletionConfig.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
             val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OPENAI_TOKEN") }
