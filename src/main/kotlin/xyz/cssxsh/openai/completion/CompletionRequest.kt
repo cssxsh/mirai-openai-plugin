@@ -74,7 +74,7 @@ public data class CompletionRequest(
         }
 
         @OpenAiDsl
-        private var suffix: String? = null
+        public var suffix: String? = null
         @OpenAiDsl
         public fun suffix(value: String): Builder = apply {
             suffix = value
