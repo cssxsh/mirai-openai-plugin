@@ -1,14 +1,12 @@
 package xyz.cssxsh.openai
 
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.*
 import okhttp3.Dns
@@ -44,13 +42,7 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
                     BearerTokens(config.token, "")
                 }
                 sendWithoutRequest { builder ->
-                    when (builder.url.encodedPathSegments.lastOrNull()) {
-                        "register" -> false
-                        "login" -> false
-                        "resend-email-verification" -> false
-                        "verify-email" -> false
-                        else -> true
-                    }
+                    builder.url.host == "api.openai.com"
                 }
             }
         }
@@ -65,7 +57,6 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
                         .includeIPv6(config.ipv6)
                         .build()
 
-                    @Throws(UnknownHostException::class)
                     override fun lookup(hostname: String): List<InetAddress> {
                         return try {
                             doh.lookup(hostname)
