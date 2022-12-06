@@ -10,7 +10,8 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
 
 ## 效果
 
-![screenshot](example/screenshot.jpg)
+![completion](example/screenshot/completion.jpg)
+![image](example/screenshot/image.jpg)
 
 ## 配置
 
