@@ -21,6 +21,9 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("token")
     override val token: String by value(System.getenv("OPENAI_TOKEN").orEmpty())
 
+    @ValueName("error_reply")
+    val reply: Boolean by value(true)
+
     @ValueName("completion_prefix")
     val completion: String by value("> ")
 

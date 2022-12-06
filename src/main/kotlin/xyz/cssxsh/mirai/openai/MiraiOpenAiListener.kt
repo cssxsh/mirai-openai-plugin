@@ -1,25 +1,56 @@
 package xyz.cssxsh.mirai.openai
 
+import io.ktor.client.network.sockets.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.cio.*
 import io.ktor.utils.io.*
+import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.MessageSource.Key.quote
+import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.openai.config.*
 import xyz.cssxsh.openai.*
 import xyz.cssxsh.openai.image.*
 import java.io.File
 import java.util.Base64
 import java.util.UUID
+import kotlin.coroutines.*
 
 @PublishedApi
 internal object MiraiOpenAiListener : SimpleListenerHost() {
     private val client = OpenAiClient(config = MiraiOpenAiConfig)
     private val folder = File(MiraiOpenAiConfig.folder)
+    private val logger = MiraiLogger.Factory.create(this::class)
+
+    override fun handleException(context: CoroutineContext, exception: Throwable) {
+        when (exception) {
+            is kotlinx.coroutines.CancellationException -> {
+                // ...
+            }
+            is ExceptionInEventHandlerException -> {
+                logger.warning({ "MiraiOpenAiListener with ${exception.event}" }, exception.cause)
+                if (MiraiOpenAiConfig.reply && exception.event is MessageEvent) launch {
+                    val event = exception.event as MessageEvent
+                    when (exception.cause) {
+                        is SocketTimeoutException, is ConnectTimeoutException -> {
+                            event.subject.sendMessage(event.message.quote() + "OpenAI API 超时 请重试")
+                        }
+                        is OverFileSizeMaxException -> {
+                            event.subject.sendMessage(event.message.quote() + "OpenAI API 图片过大 请重试")
+                        }
+                    }
+                }
+            }
+            else -> {
+                logger.warning({ "MiraiOpenAiListener" }, exception)
+            }
+        }
+    }
 
     @EventHandler
     suspend fun MessageEvent.handle() {
