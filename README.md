@@ -6,7 +6,10 @@
 [![test](https://github.com/cssxsh/mirai-openai-plugin/actions/workflows/test.yml/badge.svg)](https://github.com/cssxsh/mirai-openai-plugin/actions/workflows/test.yml)
 
 Be based on <https://chat.openai.com/>  
-OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
+OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)  
+开启聊天默认使用 `chat` (image_prefix) 触发  
+开启问答默认使用 `Q&A` (question_prefix) 触发  
+停止聊天或问答默认使用 `stop` 触发  
 
 ## 效果
 
@@ -22,7 +25,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
 *   `image_prefix` 图片生成触发前缀, 默认 `? `
 *   `chat_prefix` 聊天模型触发前缀, 默认 `chat`
 *   `question_prefix` 问答模型触发前缀, 默认 `Q&A`
-*   `stop` 停止聊天或问答, 默认`stop`
+*   `stop` 停止聊天或问答, 默认 `stop`
 *   `token` [OPENAI_TOKEN](https://beta.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用编辑文件
 *   `error_reply` 发生错误时回复用户，默认 `true`
 
