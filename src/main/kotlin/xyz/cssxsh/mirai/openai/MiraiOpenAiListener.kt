@@ -121,7 +121,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
-                buffer.append("Human: $content").append('\n')
+                buffer.append("Human: ").append(content).append('\n')
                 buffer.append("AI: ")
 
                 logger.verbose { "prompt: $buffer" }
@@ -170,7 +170,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
-                buffer.append("Q: $content").append('\n')
+                buffer.append("Q: ").append(content).append('\n')
                 buffer.append("A: ")
 
                 logger.verbose { "prompt: $buffer" }
