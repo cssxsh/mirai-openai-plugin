@@ -80,7 +80,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         return buildMessageChain {
             add(event.message.quote())
             for (choice in completion.choices) {
-                appendLine("choice.${choice.index} ${choice.finishReason}")
+                appendLine("Choice.${choice.index} FinishReason: ${choice.finishReason}")
                 appendLine(choice.text)
             }
         }
@@ -129,11 +129,15 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     stop("Human:", "AI:")
                 }
                 logger.debug { "${completion.model} - ${completion.usage}" }
-                val reply = completion.choices.first().text
+                val reply = completion.choices.first()
+                buffer.append(reply.text).append('\n')
                 launch {
-                    event.subject.sendMessage(next.quote() + reply.removePrefix("\n\n"))
+                    event.subject.sendMessage(next.quote() + reply.text.removePrefix("\n\n"))
                 }
-                buffer.append(reply).append('\n')
+                when (reply.finishReason) {
+                    "length" -> logger.warning { "max_tokens not enough for ${next.quote()} " }
+                    else -> Unit
+                }
             }
         }.invokeOnCompletion { cause ->
             logger.debug { "聊天已终止" }
@@ -167,11 +171,15 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     stop("\n")
                 }
                 logger.debug { "${completion.model} - ${completion.usage}" }
-                val reply = completion.choices.first().text
+                val reply = completion.choices.first()
+                buffer.append(reply.text).append('\n')
                 launch {
-                    event.subject.sendMessage(next.quote() + reply)
+                    event.subject.sendMessage(next.quote() + reply.text)
                 }
-                buffer.append(reply).append('\n')
+                when (reply.finishReason) {
+                    "length" -> logger.warning { "max_tokens not enough for ${next.quote()} " }
+                    else -> Unit
+                }
             }
         }.invokeOnCompletion { cause ->
             logger.debug { "问答已终止" }
