@@ -27,6 +27,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     private val client = OpenAiClient(config = MiraiOpenAiConfig)
     private val folder = File(MiraiOpenAiConfig.folder)
     private val logger = MiraiLogger.Factory.create(this::class)
+    private val lock: MutableMap<Long, MessageEvent> = java.util.concurrent.ConcurrentHashMap()
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {
@@ -53,6 +54,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
 
     @EventHandler
     suspend fun MessageEvent.handle() {
+        if (sender.id in lock) return
         val content = message.contentToString()
         val message: Message = when {
             content.startsWith(MiraiOpenAiConfig.completion) -> completion(event = this)
@@ -113,6 +115,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.chat)
         launch {
+            lock[event.sender.id] = event
             val buffer = StringBuffer(prompt)
             while (isActive) {
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
@@ -141,6 +144,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
         }.invokeOnCompletion { cause ->
+            lock.remove(event.sender.id)
             logger.debug { "聊天已终止" }
             if (cause != null) {
                 val exception = ExceptionInEventHandlerException(event = event, cause = cause)
@@ -160,6 +164,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.question)
         launch {
+            lock[event.sender.id] = event
             val buffer = StringBuffer(prompt)
             while (isActive) {
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true)
@@ -188,6 +193,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
         }.invokeOnCompletion { cause ->
+            lock.remove(event.sender.id)
             logger.debug { "问答已终止" }
             if (cause != null) {
                 val exception = ExceptionInEventHandlerException(event = event, cause = cause)
