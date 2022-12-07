@@ -47,9 +47,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     }
                 }
             }
-            else -> {
-                logger.warning({ "MiraiOpenAiListener" }, exception)
-            }
+            else -> Unit
         }
     }
 
@@ -116,7 +114,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         launch {
             val buffer = StringBuffer(prompt)
             while (isActive) {
-                val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, true)
+                val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
                 buffer.append("Human: $content").append('\n')
@@ -138,7 +136,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 buffer.append(reply).append('\n')
             }
         }.invokeOnCompletion { cause ->
-            logger.debug({ "聊天已终止" }, cause)
+            logger.debug { "聊天已终止" }
+            if (cause != null) {
+                val exception = ExceptionInEventHandlerException(event = event, cause = cause)
+                handleException(coroutineContext, exception)
+            }
         }
 
         return event.message.quote() + "聊天将开始"
@@ -150,7 +152,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         launch {
             val buffer = StringBuffer(prompt)
             while (isActive) {
-                val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, true)
+                val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
                 buffer.append("Q: $content").append('\n')
@@ -172,7 +174,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 buffer.append(reply).append('\n')
             }
         }.invokeOnCompletion { cause ->
-            logger.debug({ "问答已终止" }, cause)
+            logger.debug { "问答已终止" }
+            if (cause != null) {
+                val exception = ExceptionInEventHandlerException(event = event, cause = cause)
+                handleException(coroutineContext, exception)
+            }
         }
 
         return event.message.quote() + "问答将开始"
