@@ -30,6 +30,10 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("发生错误时回复用户")
     val reply: Boolean by value(true)
 
+    @ValueName("end_reply")
+    @ValueDescription("停止聊天时回复用户")
+    val bye: Boolean by value(false)
+
     @ValueName("completion_prefix")
     @ValueDescription("自定义模型触发前缀")
     val completion: String by value("> ")

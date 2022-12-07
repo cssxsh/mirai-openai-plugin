@@ -146,6 +146,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 val exception = ExceptionInEventHandlerException(event = event, cause = cause)
                 handleException(coroutineContext, exception)
             }
+            if (MiraiOpenAiConfig.bye) {
+                launch {
+                    event.subject.sendMessage(event.message.quote() + "聊天已终止")
+                }
+            }
         }
 
         return event.message.quote() + "聊天将开始"
@@ -187,6 +192,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             if (cause != null) {
                 val exception = ExceptionInEventHandlerException(event = event, cause = cause)
                 handleException(coroutineContext, exception)
+            }
+            if (MiraiOpenAiConfig.bye) {
+                launch {
+                    event.subject.sendMessage(event.message.quote() + "问答已终止")
+                }
             }
         }
 
