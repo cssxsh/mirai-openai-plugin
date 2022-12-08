@@ -21,7 +21,6 @@ import xyz.cssxsh.openai.finetune.*
 import xyz.cssxsh.openai.image.*
 import xyz.cssxsh.openai.model.*
 import xyz.cssxsh.openai.moderation.*
-import java.net.*
 
 public open class OpenAiClient(internal val config: OpenAiClientConfig) {
     public open val http: HttpClient = HttpClient(OkHttp) {
@@ -79,29 +78,7 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
         ContentEncoding()
         engine {
             config {
-                dns(object : Dns {
-                    private val doh = DnsOverHttps.Builder()
-                        .client(okhttp3.OkHttpClient())
-                        .url(config.doh.toHttpUrl())
-                        .includeIPv6(config.ipv6)
-                        .build()
-
-                    override fun lookup(hostname: String): List<InetAddress> {
-                        return try {
-                            doh.lookup(hostname)
-                        } catch (_: UnknownHostException) {
-                            Dns.SYSTEM.lookup(hostname)
-                        }
-                    }
-                })
-                config.proxy.toHttpUrlOrNull()?.let {
-                    val proxy = when (it.scheme) {
-                        "socks" -> Proxy(Proxy.Type.SOCKS, InetSocketAddress(it.host, it.port))
-                        "http" -> Proxy(Proxy.Type.HTTP, InetSocketAddress(it.host, it.port))
-                        else -> Proxy.NO_PROXY
-                    }
-                    proxy(proxy)
-                }
+                apply(config = config)
             }
         }
     }
