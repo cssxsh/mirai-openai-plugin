@@ -16,7 +16,7 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
 
     @ValueName("max_tokens")
     @ValueDescription("Maximum length")
-    val maxTokens: Int by value(256)
+    val maxTokens: Int by value(512)
 
     @ValueName("temperature")
     @ValueDescription("Temperature")
