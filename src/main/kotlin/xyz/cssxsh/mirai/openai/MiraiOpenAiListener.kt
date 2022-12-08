@@ -82,9 +82,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         return buildMessageChain {
             add(event.message.quote())
             for (choice in completion.choices) {
-                append("Choice.${choice.index} FinishReason: ${choice.finishReason}")
-                append(choice.text)
-                append("\n")
+                append("Choice.").append(choice.index.toString()).append(" FinishReason: ").append(choice.finishReason)
+                if (choice.text.firstOrNull() != '\n') append('\n')
+                append(choice.text).append('\n')
             }
         }
     }
