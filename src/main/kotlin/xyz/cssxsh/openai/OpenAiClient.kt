@@ -1,18 +1,18 @@
 package xyz.cssxsh.openai
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.statement.*
+import io.ktor.serialization.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.*
-import okhttp3.Dns
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.dnsoverhttps.DnsOverHttps
 import xyz.cssxsh.openai.completion.*
 import xyz.cssxsh.openai.edit.*
 import xyz.cssxsh.openai.embedding.*
@@ -43,6 +43,35 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
                 }
                 sendWithoutRequest { builder ->
                     builder.url.host == "api.openai.com"
+                }
+            }
+        }
+        HttpResponseValidator {
+            validateResponse { response ->
+                val statusCode = response.status.value
+                val originCall = response.call
+                val exceptionCall = originCall.save()
+                val exceptionResponse = exceptionCall.response
+                if (statusCode < 400) return@validateResponse
+
+                throw try {
+                    val error = exceptionResponse.body<ErrorInfoWrapper>().error
+                    OpenAiException(info = error)
+                } catch (_: ContentConvertException) {
+                    val exceptionResponseText = try {
+                        exceptionResponse.bodyAsText()
+                    } catch (_: MalformedInputException) {
+                        "<body failed decoding>"
+                    }
+                    when (statusCode) {
+                        in 400..499 -> {
+                            ClientRequestException(response, exceptionResponseText)
+                        }
+                        in 500..599 -> {
+                            ServerResponseException(response, exceptionResponseText)
+                        }
+                        else -> ResponseException(response, exceptionResponseText)
+                    }
                 }
             }
         }
