@@ -55,6 +55,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     @EventHandler
     suspend fun MessageEvent.handle() {
         if (sender.id in lock) return
+        if (lock.size >= MiraiOpenAiConfig.limit) {
+            subject.sendMessage("聊天服务已开启过多，请稍后重试")
+            return
+        }
         val content = message.contentToString()
         val message: Message = when {
             content.startsWith(MiraiOpenAiConfig.completion) -> completion(event = this)

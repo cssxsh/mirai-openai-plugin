@@ -57,4 +57,8 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("image_folder")
     @ValueDescription("图片生成缓存文件夹")
     val folder: String by value("run")
+
+    @ValueName("chat_limit")
+    @ValueDescription("聊天服务个数限制")
+    val limit: Int by value(10)
 }
