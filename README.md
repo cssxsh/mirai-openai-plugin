@@ -74,3 +74,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)
 
 1.  从 [Releases](https://github.com/cssxsh/mirai-openai-plugin/releases) 或者 [Maven](https://repo1.maven.org/maven2/xyz/cssxsh/mirai/mirai-openai-plugin/) 下载 `mirai2.jar`
 2.  将其放入 `plugins` 文件夹中
+
+## [爱发电](https://afdian.net/@cssxsh)
+
+![afdian](example/sponsor/afdian.jpg)
