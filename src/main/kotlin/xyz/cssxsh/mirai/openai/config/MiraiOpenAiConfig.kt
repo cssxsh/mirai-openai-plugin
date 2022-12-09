@@ -61,4 +61,8 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("chat_limit")
     @ValueDescription("聊天服务个数限制")
     val limit: Int by value(10)
+
+    @ValueName("has_permission")
+    @ValueDescription("聊天服务个数限制")
+    val permission: Boolean by value(false)
 }

@@ -7,6 +7,9 @@ import io.ktor.http.*
 import io.ktor.util.cio.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
+import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
+import net.mamoe.mirai.console.permission.*
+import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
@@ -28,6 +31,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     private val folder = File(MiraiOpenAiConfig.folder)
     private val logger = MiraiLogger.Factory.create(this::class)
     private val lock: MutableMap<Long, MessageEvent> = java.util.concurrent.ConcurrentHashMap()
+    private val completion: Permission by MiraiOpenAiPermissions
+    private val image: Permission by MiraiOpenAiPermissions
+    private val chat: Permission by MiraiOpenAiPermissions
+    private val question: Permission by MiraiOpenAiPermissions
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {
@@ -55,16 +62,36 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     @EventHandler
     suspend fun MessageEvent.handle() {
         if (sender.id in lock) return
-        if (lock.size >= MiraiOpenAiConfig.limit) {
-            subject.sendMessage("聊天服务已开启过多，请稍后重试")
-            return
-        }
         val content = message.contentToString()
         val message: Message = when {
-            content.startsWith(MiraiOpenAiConfig.completion) -> completion(event = this)
-            content.startsWith(MiraiOpenAiConfig.image) -> image(event = this)
-            content.startsWith(MiraiOpenAiConfig.chat) -> chat(event = this)
-            content.startsWith(MiraiOpenAiConfig.question) -> question(event = this)
+            content.startsWith(MiraiOpenAiConfig.completion)
+                && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(completion))
+            -> if (lock.size >= MiraiOpenAiConfig.limit) {
+                "聊天服务已开启过多，请稍后重试".toPlainText()
+            } else {
+                completion(event = this)
+            }
+            content.startsWith(MiraiOpenAiConfig.image)
+                && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(image))
+            -> if (lock.size >= MiraiOpenAiConfig.limit) {
+                "聊天服务已开启过多，请稍后重试".toPlainText()
+            } else {
+                image(event = this)
+            }
+            content.startsWith(MiraiOpenAiConfig.chat)
+                && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(chat))
+            -> if (lock.size >= MiraiOpenAiConfig.limit) {
+                "聊天服务已开启过多，请稍后重试".toPlainText()
+            } else {
+                chat(event = this)
+            }
+            content.startsWith(MiraiOpenAiConfig.question)
+                && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(question))
+            -> if (lock.size >= MiraiOpenAiConfig.limit) {
+                "聊天服务已开启过多，请稍后重试".toPlainText()
+            } else {
+                question(event = this)
+            }
             else -> return
         }
 

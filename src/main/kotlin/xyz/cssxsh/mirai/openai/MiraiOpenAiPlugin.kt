@@ -5,6 +5,7 @@ import net.mamoe.mirai.console.data.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.*
 import net.mamoe.mirai.event.*
+import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.openai.config.*
 
 /**
@@ -53,6 +54,12 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         for (config in config) config.save()
 
         for (listener in listeners) (listener as SimpleListenerHost).registerTo(globalEventChannel())
+
+        if (MiraiOpenAiConfig.permission) {
+            logger.info { "权限检查已开启" }
+        } else {
+            logger.info { "权限检查未开启" }
+        }
     }
 
     override fun onDisable() {
