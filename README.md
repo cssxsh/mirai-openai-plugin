@@ -6,7 +6,7 @@
 [![test](https://github.com/cssxsh/mirai-openai-plugin/actions/workflows/test.yml/badge.svg)](https://github.com/cssxsh/mirai-openai-plugin/actions/workflows/test.yml)
 
 Be based on <https://chat.openai.com/>  
-OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册)  
+OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后创建 [TOKEN](https://beta.openai.com/account/api-keys)  
 开启聊天默认使用 `chat` (image_prefix) 触发  
 开启问答默认使用 `Q&A` (question_prefix) 触发  
 停止聊天或问答默认使用 `stop` 触发  
