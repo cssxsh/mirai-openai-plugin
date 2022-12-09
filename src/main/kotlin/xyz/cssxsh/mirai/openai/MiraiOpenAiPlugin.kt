@@ -57,6 +57,10 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
 
         if (MiraiOpenAiConfig.permission) {
             logger.info { "权限检查已开启" }
+            MiraiOpenAiListener.completion
+            MiraiOpenAiListener.image
+            MiraiOpenAiListener.chat
+            MiraiOpenAiListener.question
         } else {
             logger.info { "权限检查未开启" }
         }

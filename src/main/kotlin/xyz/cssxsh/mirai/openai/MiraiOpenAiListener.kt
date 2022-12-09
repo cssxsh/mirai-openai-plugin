@@ -31,10 +31,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     private val folder = File(MiraiOpenAiConfig.folder)
     private val logger = MiraiLogger.Factory.create(this::class)
     private val lock: MutableMap<Long, MessageEvent> = java.util.concurrent.ConcurrentHashMap()
-    private val completion: Permission by MiraiOpenAiPermissions
-    private val image: Permission by MiraiOpenAiPermissions
-    private val chat: Permission by MiraiOpenAiPermissions
-    private val question: Permission by MiraiOpenAiPermissions
+    internal val completion: Permission by MiraiOpenAiPermissions
+    internal val image: Permission by MiraiOpenAiPermissions
+    internal val chat: Permission by MiraiOpenAiPermissions
+    internal val question: Permission by MiraiOpenAiPermissions
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {

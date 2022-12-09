@@ -20,7 +20,7 @@ internal object MiraiOpenAiPermissions : ReadOnlyProperty<SimpleListenerHost, Pe
 
             records[property.name] = permission
 
-            MiraiOpenAiPlugin.logger.info("${property}_prefix 权限 ${permission.id}")
+            MiraiOpenAiPlugin.logger.info("${property.name}_prefix 权限 ${permission.id}")
 
             permission
         }
