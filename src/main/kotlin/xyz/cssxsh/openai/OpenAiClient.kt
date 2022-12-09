@@ -49,9 +49,10 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
             validateResponse { response ->
                 val statusCode = response.status.value
                 val originCall = response.call
+                if (statusCode < 400) return@validateResponse
+
                 val exceptionCall = originCall.save()
                 val exceptionResponse = exceptionCall.response
-                if (statusCode < 400) return@validateResponse
 
                 throw try {
                     val error = exceptionResponse.body<ErrorInfoWrapper>().error
