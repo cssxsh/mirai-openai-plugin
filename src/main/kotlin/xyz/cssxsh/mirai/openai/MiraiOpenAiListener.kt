@@ -148,10 +148,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         launch {
             lock[event.sender.id] = event
             val buffer = StringBuffer(prompt)
+            buffer.append('\n')
             while (isActive) {
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
+
+                if (buffer.length > ChatConfig.maxTokens * 0.6) {
+                    buffer.delete(prompt.length + 1, buffer.lastIndexOf("Human: "))
+                }
+
                 buffer.append("Human: ").append(content).append('\n')
                 buffer.append("AI: ")
 
@@ -197,10 +203,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         launch {
             lock[event.sender.id] = event
             val buffer = StringBuffer(prompt)
+            buffer.append('\n')
             while (isActive) {
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
+
+                if (buffer.length > ChatConfig.maxTokens * 0.6) {
+                    buffer.delete(prompt.length + 1, buffer.lastIndexOf("Human: "))
+                }
+
                 buffer.append("Q: ").append(content).append('\n')
                 buffer.append("A: ")
 
