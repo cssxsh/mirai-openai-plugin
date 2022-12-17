@@ -1,13 +1,13 @@
 plugins {
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.21"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.serialization") version "1.7.22"
 
     id("net.mamoe.mirai-console") version "2.13.2"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.0.5"
+version = "1.0.6"
 
 mavenCentralPublish {
     useCentralS01()
@@ -38,9 +38,11 @@ dependencies {
     implementation("io.ktor:ktor-client-encoding")
     implementation("io.ktor:ktor-client-content-negotiation")
     implementation("io.ktor:ktor-serialization-kotlinx-json")
-    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:4.10.0")
     //
-    implementation(platform("org.slf4j:slf4j-parent:2.0.5"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps")
+    //
+    implementation(platform("org.slf4j:slf4j-parent:2.0.6"))
     testImplementation("org.slf4j:slf4j-simple")
 }
 
