@@ -104,14 +104,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
             content.startsWith(MiraiOpenAiConfig.reload)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(reload))
-            -> if (lock.size >= MiraiOpenAiConfig.limit) {
-                "聊天服务已开启过多，请稍后重试".toPlainText()
-            } else {
-                with(MiraiOpenAiPlugin) {
-                    config.forEach { config ->
-                        config.reload()
-                    }
+            -> with(MiraiOpenAiPlugin) {
+                config.forEach { config ->
+                    config.reload()
                 }
+                client.clearToken()
                 "OPENAI 配置已重载".toPlainText()
             }
             else -> return
