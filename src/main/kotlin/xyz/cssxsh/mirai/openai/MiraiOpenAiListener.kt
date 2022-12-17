@@ -35,6 +35,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     internal val image: Permission by MiraiOpenAiPermissions
     internal val chat: Permission by MiraiOpenAiPermissions
     internal val question: Permission by MiraiOpenAiPermissions
+    internal val reload: Permission by MiraiOpenAiPermissions
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {
@@ -100,6 +101,18 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 "聊天服务已开启过多，请稍后重试".toPlainText()
             } else {
                 question(event = this)
+            }
+            content.startsWith(MiraiOpenAiConfig.reload)
+                && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(reload))
+            -> if (lock.size >= MiraiOpenAiConfig.limit) {
+                "聊天服务已开启过多，请稍后重试".toPlainText()
+            } else {
+                with(MiraiOpenAiPlugin) {
+                    config.forEach { config ->
+                        config.reload()
+                    }
+                }
+                "OPENAI 配置已重载".toPlainText()
             }
             else -> return
         }

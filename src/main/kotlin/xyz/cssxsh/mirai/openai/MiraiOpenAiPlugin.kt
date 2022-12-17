@@ -21,8 +21,11 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     }
 ) {
 
-    private val config: List<PluginConfig> by services()
-    private val listeners: List<ListenerHost> by services()
+    @PublishedApi
+    internal val config: List<PluginConfig> by services()
+
+    @PublishedApi
+    internal val listeners: List<ListenerHost> by services()
 
     @Suppress("INVISIBLE_MEMBER")
     private inline fun <reified T : Any> services(): Lazy<List<T>> = lazy {
@@ -62,6 +65,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
             MiraiOpenAiListener.image
             MiraiOpenAiListener.chat
             MiraiOpenAiListener.question
+            MiraiOpenAiListener.reload
         } else {
             logger.info { "权限检查未开启" }
         }

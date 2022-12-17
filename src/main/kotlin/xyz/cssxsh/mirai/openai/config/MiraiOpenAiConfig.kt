@@ -50,6 +50,10 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("问答模型触发前缀")
     val question: String by value("Q&A")
 
+    @ValueName("reload_prefix")
+    @ValueDescription("重载配置触发前缀")
+    val reload: String by value("openai-reload")
+
     @ValueName("stop")
     @ValueDescription("停止聊天或问答")
     val stop: String by value("stop")
