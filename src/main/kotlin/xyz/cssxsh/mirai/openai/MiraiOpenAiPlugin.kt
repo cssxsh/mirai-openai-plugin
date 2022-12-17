@@ -38,6 +38,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
             val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OPENAI_TOKEN") }
+
             @OptIn(ConsoleExperimentalApi::class)
             @Suppress("UNCHECKED_CAST")
             val value = MiraiOpenAiConfig.findBackingFieldValue<String>("token") as Value<String>

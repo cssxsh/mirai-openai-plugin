@@ -6,6 +6,7 @@ import kotlinx.serialization.*
 public enum class ImageResponseFormat {
     @SerialName("url")
     URL,
+
     @SerialName("b64_json")
     B64_JSON;
 }

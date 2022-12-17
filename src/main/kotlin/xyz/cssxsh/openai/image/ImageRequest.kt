@@ -31,6 +31,7 @@ public data class ImageRequest(
 
         @OpenAiDsl
         public var number: Int = 1
+
         @OpenAiDsl
         public fun number(value: Int): Builder = apply {
             number = value
@@ -38,6 +39,7 @@ public data class ImageRequest(
 
         @OpenAiDsl
         public var size: ImageSize = ImageSize.LARGE
+
         @OpenAiDsl
         public fun size(value: ImageSize): Builder = apply {
             size = value
@@ -45,6 +47,7 @@ public data class ImageRequest(
 
         @OpenAiDsl
         public var format: ImageResponseFormat = ImageResponseFormat.URL
+
         @OpenAiDsl
         public fun format(value: ImageResponseFormat): Builder = apply {
             format = value
@@ -52,6 +55,7 @@ public data class ImageRequest(
 
         @OpenAiDsl
         public var user: String = ""
+
         @OpenAiDsl
         public fun user(value: String): Builder = apply {
             user = value

@@ -64,10 +64,12 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var prompt: List<String> = emptyList()
+
         @OpenAiDsl
         public fun prompt(values: List<String>): Builder = apply {
             prompt = values
         }
+
         @OpenAiDsl
         public fun prompt(vararg values: String): Builder = apply {
             prompt = values.asList()
@@ -75,6 +77,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var suffix: String? = null
+
         @OpenAiDsl
         public fun suffix(value: String): Builder = apply {
             suffix = value
@@ -82,6 +85,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var maxTokens: Int = 16
+
         @OpenAiDsl
         public fun maxTokens(value: Int): Builder = apply {
             maxTokens = value
@@ -89,6 +93,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var temperature: Double = 1.0
+
         @OpenAiDsl
         public fun temperature(value: Double): Builder = apply {
             temperature = value
@@ -96,6 +101,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var topP: Double = 1.0
+
         @OpenAiDsl
         public fun topP(value: Double): Builder = apply {
             topP = value
@@ -103,6 +109,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var number: Int = 1
+
         @OpenAiDsl
         public fun number(value: Int): Builder = apply {
             number = value
@@ -110,6 +117,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var stream: Boolean = false
+
         @OpenAiDsl
         public fun stream(value: Boolean): Builder = apply {
             stream = value
@@ -117,6 +125,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var logprobs: Int? = null
+
         @OpenAiDsl
         public fun logprobs(value: Int): Builder = apply {
             logprobs = value
@@ -124,6 +133,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var echo: Boolean = false
+
         @OpenAiDsl
         public fun echo(value: Boolean): Builder = apply {
             echo = value
@@ -131,10 +141,12 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var stop: List<String>? = null
+
         @OpenAiDsl
         public fun stop(values: List<String>): Builder = apply {
             stop = values
         }
+
         @OpenAiDsl
         public fun stop(vararg values: String): Builder = apply {
             stop = values.asList()
@@ -142,6 +154,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var presencePenalty: Double = 0.0
+
         @OpenAiDsl
         public fun presencePenalty(value: Double): Builder = apply {
             presencePenalty = value
@@ -149,6 +162,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var frequencyPenalty: Double = 0.0
+
         @OpenAiDsl
         public fun frequencyPenalty(value: Double): Builder = apply {
             frequencyPenalty = value
@@ -156,6 +170,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var bestOf: Int = 1
+
         @OpenAiDsl
         public fun bestOf(value: Int): Builder = apply {
             bestOf = value
@@ -163,10 +178,12 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var logitBias: Map<String, Int>? = null
+
         @OpenAiDsl
         public fun logitBias(value: Map<String, Int>): Builder = apply {
             logitBias = value
         }
+
         @OpenAiDsl
         public fun logitBias(vararg pairs: Pair<String, Int>): Builder = apply {
             logitBias = mapOf(pairs = pairs)
@@ -174,6 +191,7 @@ public data class CompletionRequest(
 
         @OpenAiDsl
         public var user: String = ""
+
         @OpenAiDsl
         public fun user(value: String): Builder = apply {
             user = value

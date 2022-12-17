@@ -25,10 +25,12 @@ public data class EmbeddingRequest(
 
         @OpenAiDsl
         public var input: List<String> = emptyList()
+
         @OpenAiDsl
         public fun input(values: List<String>): Builder = apply {
             input = values
         }
+
         @OpenAiDsl
         public fun input(vararg values: String): Builder = apply {
             input = values.asList()
@@ -36,6 +38,7 @@ public data class EmbeddingRequest(
 
         @OpenAiDsl
         public var user: String = ""
+
         @OpenAiDsl
         public fun user(value: String): Builder = apply {
             user = value

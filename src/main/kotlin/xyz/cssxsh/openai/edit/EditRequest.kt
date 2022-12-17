@@ -34,6 +34,7 @@ public data class EditRequest(
 
         @OpenAiDsl
         private var input: String = ""
+
         @OpenAiDsl
         public fun input(value: String): Builder = apply {
             input = value
@@ -41,6 +42,7 @@ public data class EditRequest(
 
         @OpenAiDsl
         public var instruction: String = ""
+
         @OpenAiDsl
         public fun instruction(value: String): Builder = apply {
             instruction = value
@@ -48,6 +50,7 @@ public data class EditRequest(
 
         @OpenAiDsl
         public var number: Int = 1
+
         @OpenAiDsl
         public fun number(value: Int): Builder = apply {
             number = value
@@ -55,6 +58,7 @@ public data class EditRequest(
 
         @OpenAiDsl
         public var temperature: Double = 1.0
+
         @OpenAiDsl
         public fun temperature(value: Double): Builder = apply {
             temperature = value
@@ -62,6 +66,7 @@ public data class EditRequest(
 
         @OpenAiDsl
         public var topP: Double = 1.0
+
         @OpenAiDsl
         public fun topP(value: Double): Builder = apply {
             topP = value

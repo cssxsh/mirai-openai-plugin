@@ -52,6 +52,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var validationFile: String = ""
+
         @OpenAiDsl
         public fun validationFile(value: String): Builder = apply {
             validationFile = value
@@ -59,6 +60,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var model: String = "curie"
+
         @OpenAiDsl
         public fun model(value: String): Builder = apply {
             model = value
@@ -66,6 +68,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var nEpochs: Int = 4
+
         @OpenAiDsl
         public fun nEpochs(value: Int): Builder = apply {
             nEpochs = value
@@ -73,6 +76,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var batchSize: Int? = null
+
         @OpenAiDsl
         public fun batchSize(value: Int): Builder = apply {
             batchSize = value
@@ -80,6 +84,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var learningRateMultiplier: Double? = null
+
         @OpenAiDsl
         public fun learningRateMultiplier(value: Double): Builder = apply {
             learningRateMultiplier = value
@@ -87,6 +92,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var promptLossWeight: Double = 0.01
+
         @OpenAiDsl
         public fun promptLossWeight(value: Double): Builder = apply {
             promptLossWeight = value
@@ -94,6 +100,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var computeClassificationMetrics: Boolean = false
+
         @OpenAiDsl
         public fun computeClassificationMetrics(value: Boolean): Builder = apply {
             computeClassificationMetrics = value
@@ -101,6 +108,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var classificationNClasses: Int? = null
+
         @OpenAiDsl
         public fun classificationNClasses(value: Int): Builder = apply {
             classificationNClasses = value
@@ -108,6 +116,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var classificationPositiveClass: String? = null
+
         @OpenAiDsl
         public fun classificationPositiveClass(value: String): Builder = apply {
             classificationPositiveClass = value
@@ -115,6 +124,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         public var classificationBetas: String? = null
+
         @OpenAiDsl
         public fun classificationBetas(value: String): Builder = apply {
             classificationBetas = value
@@ -122,6 +132,7 @@ public data class FineTuneRequest(
 
         @OpenAiDsl
         private var suffix: String? = null
+
         @OpenAiDsl
         public fun suffix(value: String): Builder = apply {
             suffix = value
