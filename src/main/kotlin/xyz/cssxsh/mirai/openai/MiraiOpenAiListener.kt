@@ -50,7 +50,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                             event.subject.sendMessage(event.message.quote() + "OpenAI API 超时 请重试")
                         }
                         is OverFileSizeMaxException -> {
-                            event.subject.sendMessage(event.message.quote() + "OpenAI API 图片过大 请重试")
+                            event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片过大 请重试")
+                        }
+                        is IllegalStateException -> {
+                            val info = exception.cause.message
+                            when {
+                                info == null -> Unit
+                                info.endsWith(", failed on all servers.") -> {
+                                    event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片上传失败 请重试")
+                                }
+                            }
                         }
                     }
                 }
