@@ -92,6 +92,9 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
     public open val finetune: FineTuneController by lazy { FineTuneController(this) }
     public open val moderation: ModerationController by lazy { ModerationController(this) }
 
+    /**
+     * @since 1.0.7
+     */
     public open fun clearToken() {
         for (provider in http.plugin(Auth).providers) {
             if (provider !is BearerAuthProvider) continue

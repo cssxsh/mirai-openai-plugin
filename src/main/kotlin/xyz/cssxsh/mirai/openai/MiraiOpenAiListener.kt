@@ -46,7 +46,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 logger.warning({ "MiraiOpenAiListener with ${exception.event}" }, exception.cause)
                 if (MiraiOpenAiConfig.reply && exception.event is MessageEvent) launch {
                     val event = exception.event as MessageEvent
-                    when (exception.cause) {
+                    when (val cause = exception.cause) {
                         is SocketTimeoutException, is ConnectTimeoutException -> {
                             event.subject.sendMessage(event.message.quote() + "OpenAI API 超时 请重试")
                         }
@@ -54,7 +54,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                             event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片过大 请重试")
                         }
                         is IllegalStateException -> {
-                            val info = exception.cause.message
+                            val info = cause.message
                             when {
                                 info == null -> Unit
                                 info.endsWith(", failed on all servers.") -> {
