@@ -81,4 +81,4 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 
 ## [爱发电](https://afdian.net/@cssxsh)
 
-![afdian](example/sponsor/afdian.jpg)
+![afdian](.github/afdian.jpg)
