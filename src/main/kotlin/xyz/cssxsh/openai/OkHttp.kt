@@ -23,15 +23,16 @@ internal fun OkHttpClient.Builder.apply(config: OpenAiClientConfig) {
                 doh.lookup(hostname)
             } catch (_: UnknownHostException) {
                 Dns.SYSTEM.lookup(hostname)
+            } catch (cause: Exception) {
+                throw UnknownHostException(hostname).initCause(cause)
             }
         }
     })
-    config.proxy.toHttpUrlOrNull()?.let {
-        val proxy = when (it.scheme) {
-            "socks" -> Proxy(Proxy.Type.SOCKS, InetSocketAddress(it.host, it.port))
-            "http" -> Proxy(Proxy.Type.HTTP, InetSocketAddress(it.host, it.port))
+    proxy(config.proxy.toHttpUrlOrNull()?.let { url ->
+        when (url.scheme) {
+            "socks" -> Proxy(Proxy.Type.SOCKS, InetSocketAddress(url.host, url.port))
+            "http" -> Proxy(Proxy.Type.HTTP, InetSocketAddress(url.host, url.port))
             else -> Proxy.NO_PROXY
         }
-        proxy(proxy)
-    }
+    })
 }
