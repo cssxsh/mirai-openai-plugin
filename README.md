@@ -11,6 +11,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 开启问答默认使用 `Q&A` (question_prefix) 触发  
 开启图片生成默认使用 `?` (image_prefix) 触发  
 停止聊天或问答默认使用 `stop` 触发  
+默认情况下 `权限检查` 是关闭的, 需要在基本配置中配置开启(在日志中给出权限ID)  
 
 ## 效果
 
@@ -32,7 +33,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 *   `error_reply` 发生错误时回复用户，默认 `true`
 *   `end_reply` 停止聊天时回复用户，默认 `false`
 *   `chat_limit` 聊天服务个数限制
-*   `has_permission` 权限检查
+*   `has_permission` 权限检查, 为 `true` 开启
 
 `completion.yml` 自定义模型详细配置
 
@@ -57,7 +58,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 
 ### 注册
 
-<https://blog.csdn.net/duoshehuan6005/article/details/128184450>
+<https://juejin.cn/post/7175153557941780541>
 
 ### 测试
 
