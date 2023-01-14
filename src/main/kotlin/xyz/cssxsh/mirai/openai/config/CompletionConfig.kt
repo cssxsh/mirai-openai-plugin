@@ -52,16 +52,16 @@ internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
 
     fun push(builder: CompletionRequest.Builder) {
         builder.model = model
-        if (suffix.isNotEmpty()) builder.suffix = suffix
+        builder.suffix = suffix.ifEmpty { null }
         builder.maxTokens = maxTokens
         builder.temperature = temperature
         builder.topP = topP
         builder.number = number
         builder.echo = echo
-        if (stop.isNotEmpty()) builder.stop = stop
+        builder.stop = stop.ifEmpty { null }
         builder.presencePenalty = presencePenalty
         builder.frequencyPenalty = frequencyPenalty
         builder.bestOf = bestOf
-        if (logitBias.isNotEmpty()) builder.logitBias = logitBias
+        builder.logitBias = logitBias.ifEmpty { null }
     }
 }
