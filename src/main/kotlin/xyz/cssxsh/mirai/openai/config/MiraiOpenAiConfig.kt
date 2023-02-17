@@ -46,6 +46,10 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("聊天模型触发前缀")
     val chat: String by value("chat")
 
+    @ValueName("chat_by_at")
+    @ValueDescription("聊天模型触发于@")
+    val chatByAt: Boolean by value(false)
+
     @ValueName("question_prefix")
     @ValueDescription("问答模型触发前缀")
     val question: String by value("Q&A")
