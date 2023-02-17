@@ -277,17 +277,18 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 val response = client.http.get(item.url)
                 val filename = response.headers[HttpHeaders.ContentDisposition]
                     ?.let { ContentDisposition.parse(it).parameter(ContentDisposition.Parameters.FileName) }
-                    ?: "${UUID.randomUUID()}.${response.contentType()?.contentSubtype}"
+                    ?: "${UUID.randomUUID()}.${response.contentType()?.contentSubtype ?: "png"}"
 
                 val target = folder.resolve(filename)
                 response.bodyAsChannel().copyAndClose(target.writeChannel())
-
+                // XXX: target.writeChannel() 不堵塞 https://github.com/cssxsh/mirai-openai-plugin/issues/2
+                delay(3_000)
                 target
             }
             item.base64.isNotEmpty() -> {
                 val bytes = Base64.getDecoder().decode(item.base64)
 
-                val target = folder.resolve("${UUID.randomUUID()}.bin")
+                val target = folder.resolve("${UUID.randomUUID()}.png")
                 target.writeBytes(bytes)
 
                 target
