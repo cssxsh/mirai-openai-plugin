@@ -76,6 +76,10 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         } else {
             logger.info { "权限检查未开启" }
         }
+
+        if (MiraiOpenAiConfig.chatByAt) {
+            logger.warning { "@Bot 触发聊天已开启, 手机端引用消息会自带@，请注意不要误触" }
+        }
     }
 
     override fun onDisable() {
