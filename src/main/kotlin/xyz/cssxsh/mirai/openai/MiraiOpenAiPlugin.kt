@@ -17,20 +17,20 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-openai-plugin",
         name = "mirai-openai-plugin",
-        version = "1.0.7",
+        version = "1.1.0",
     ) {
         author("cssxsh")
     }
 ) {
 
     @PublishedApi
-    internal val config: List<PluginConfig> by services()
+    internal val config: List<PluginConfig> by spi()
 
     @PublishedApi
-    internal val listeners: List<ListenerHost> by services()
+    internal val listeners: List<ListenerHost> by spi()
 
     @Suppress("INVISIBLE_MEMBER")
-    private inline fun <reified T : Any> services(): Lazy<List<T>> = lazy {
+    private inline fun <reified T : Any> spi(): Lazy<List<T>> = lazy {
         with(net.mamoe.mirai.console.internal.util.PluginServiceHelper) {
             jvmPluginClasspath.pluginClassLoader
                 .findServices<T>()

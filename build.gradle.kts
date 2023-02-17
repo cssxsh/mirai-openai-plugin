@@ -2,12 +2,12 @@ plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.serialization") version "1.7.22"
 
-    id("net.mamoe.mirai-console") version "2.13.2"
+    id("net.mamoe.mirai-console") version "2.14.0"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.0.7"
+version = "1.1.0"
 
 mavenCentralPublish {
     useCentralS01()
@@ -27,7 +27,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     //
-    implementation(platform("net.mamoe:mirai-bom:2.13.2"))
+    implementation(platform("net.mamoe:mirai-bom:2.14.0"))
     compileOnly("net.mamoe:mirai-console-compiler-common")
     testImplementation("net.mamoe:mirai-core-mock")
     testImplementation("net.mamoe:mirai-logging-slf4j")
