@@ -4,9 +4,13 @@
 
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-openai-plugin)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-openai-plugin)
 [![test](https://github.com/cssxsh/mirai-openai-plugin/actions/workflows/test.yml/badge.svg)](https://github.com/cssxsh/mirai-openai-plugin/actions/workflows/test.yml)
+[![MiraiForum](https://img.shields.io/badge/post-on%20MiraiForum-yellow)](https://mirai.mamoe.net/topic/1849)
 
 Be based on <https://chat.openai.com/>  
 OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后创建 [TOKEN](https://beta.openai.com/account/api-keys)  
+注意，不是 `Cookie Token`, 是 `api-key`  
+另外，可以直连，不需要代理，只是注册账号的时候需要代理   
+
 开启聊天默认使用 `chat` (chat_prefix) 触发  
 开启问答默认使用 `Q&A` (question_prefix) 触发  
 开启图片生成默认使用 `?` (image_prefix) 触发  
