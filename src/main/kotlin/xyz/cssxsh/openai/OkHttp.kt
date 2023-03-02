@@ -1,8 +1,8 @@
 package xyz.cssxsh.openai
 
+import io.ktor.http.*
 import okhttp3.Dns
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.dnsoverhttps.DnsOverHttps
 import java.net.InetAddress
@@ -28,11 +28,12 @@ internal fun OkHttpClient.Builder.apply(config: OpenAiClientConfig) {
             }
         }
     })
-    proxy(config.proxy.toHttpUrlOrNull()?.let { url ->
-        when (url.scheme) {
-            "socks" -> Proxy(Proxy.Type.SOCKS, InetSocketAddress(url.host, url.port))
-            "http" -> Proxy(Proxy.Type.HTTP, InetSocketAddress(url.host, url.port))
-            else -> Proxy.NO_PROXY
+    proxy(config.proxy.ifEmpty { null }?.let { urlString ->
+        val url = Url(urlString)
+        when (url.protocol) {
+            URLProtocol.HTTP -> Proxy(Proxy.Type.HTTP, InetSocketAddress(url.host, url.port))
+            URLProtocol.SOCKS -> Proxy(Proxy.Type.SOCKS, InetSocketAddress(url.host, url.port))
+            else -> throw IllegalArgumentException("Illegal Proxy: $urlString")
         }
     })
 }
