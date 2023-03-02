@@ -13,6 +13,7 @@ import io.ktor.serialization.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.json.*
+import xyz.cssxsh.openai.chat.*
 import xyz.cssxsh.openai.completion.*
 import xyz.cssxsh.openai.edit.*
 import xyz.cssxsh.openai.embedding.*
@@ -91,6 +92,7 @@ public open class OpenAiClient(internal val config: OpenAiClientConfig) {
     public open val file: FileController by lazy { FileController(this) }
     public open val finetune: FineTuneController by lazy { FineTuneController(this) }
     public open val moderation: ModerationController by lazy { ModerationController(this) }
+    public open val chat: ChatController by lazy { ChatController(this) }
 
     /**
      * @since 1.0.7

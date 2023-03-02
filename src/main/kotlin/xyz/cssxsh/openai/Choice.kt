@@ -11,5 +11,7 @@ public data class Choice(
     @SerialName("logprobs")
     val logprobs: Int? = null,
     @SerialName("text")
-    val text: String = ""
+    val text: String = "",
+    @SerialName("message")
+    val message: ChoiceMessage? = null
 )
