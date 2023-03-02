@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.openai.config
 
 import net.mamoe.mirai.console.data.*
+import xyz.cssxsh.openai.chat.*
 import xyz.cssxsh.openai.completion.*
 
 @PublishedApi
@@ -10,9 +11,9 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
     @ValueDescription("等待停止时间")
     val timeout: Long by value(60_000L)
 
-    @ValueName("model")
-    @ValueDescription("Model")
-    val model: String by value("text-davinci-003")
+    @ValueName("gpt_model")
+    @ValueDescription("GPT Model")
+    val model: String by value("gpt-3.5-turbo-0301")
 
     @ValueName("max_tokens")
     @ValueDescription("Maximum length")
@@ -34,7 +35,7 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
     @ValueDescription("Frequency Penalty")
     val frequencyPenalty: Double by value(0.0)
 
-    fun push(builder: CompletionRequest.Builder) {
+    fun push(builder: ChatRequest.Builder) {
         builder.model = model
         builder.maxTokens = maxTokens
         builder.temperature = temperature

@@ -169,35 +169,34 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun chat(event: MessageEvent): Message {
-        val prompt = event.message.contentToString()
+        val system = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.chat)
         launch {
             lock[event.sender.id] = event
-            val buffer = StringBuffer(prompt)
-            buffer.append('\n')
+            val buffer = mutableListOf<ChoiceMessage>()
+            buffer.add(ChoiceMessage(
+                role = "system",
+                content = system
+            ))
             while (isActive) {
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
 
-                if (buffer.length > ChatConfig.maxTokens * 0.6) {
-                    buffer.delete(prompt.length + 1, buffer.lastIndexOf("Human: "))
-                }
-
-                buffer.append("Human: ").append(content).append('\n')
-                buffer.append("AI: ")
-
-                logger.verbose { "prompt: $buffer" }
-
-                val completion = client.completion.create(model = "text-davinci-003") {
-                    prompt(buffer.toString())
+                val chat = client.chat.create(model = "gpt-3.5-turbo-0301") {
+                    buffer.append("user", content)
                     user(event.senderName)
                     ChatConfig.push(this)
-                    stop("Human:", "AI:")
                 }
-                logger.debug { "${completion.model} - ${completion.usage}" }
-                val reply = completion.choices.first()
-                buffer.append(reply.text).append('\n')
+                logger.debug { "${chat.model} - ${chat.usage}" }
+                val reply = chat.choices.first()
+                buffer.add(reply.message ?: ChoiceMessage(
+                    role = "assistant",
+                    content = reply.text
+                ))
+                if (chat.usage.totalTokens > ChatConfig.maxTokens * 0.96) {
+                    buffer.removeFirstOrNull()
+                }
                 launch {
                     event.subject.sendMessage(next.quote() + reply.text.removePrefix("\n\n"))
                 }
