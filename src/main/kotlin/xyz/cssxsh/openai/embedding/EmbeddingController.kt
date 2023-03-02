@@ -6,12 +6,12 @@ import io.ktor.http.*
 import xyz.cssxsh.openai.*
 
 /**
- * [Embeddings](https://beta.openai.com/docs/api-reference/embeddings)
+ * [Embeddings](https://platform.openai.com/docs/api-reference/embeddings)
  */
 public class EmbeddingController(private val client: OpenAiClient) {
 
     /**
-     * [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+     * [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
      */
     public suspend fun create(request: EmbeddingRequest): List<EmbeddingInfo> {
         val response = client.http.post("https://api.openai.com/v1/embeddings") {
@@ -24,7 +24,7 @@ public class EmbeddingController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+     * [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
      */
     public suspend fun create(model: String, block: EmbeddingRequest.Builder.() -> Unit): List<EmbeddingInfo> {
         return create(request = EmbeddingRequest.Builder(model = model).apply(block).build())

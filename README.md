@@ -7,7 +7,7 @@
 [![MiraiForum](https://img.shields.io/badge/post-on%20MiraiForum-yellow)](https://mirai.mamoe.net/topic/1849)
 
 Be based on <https://chat.openai.com/>  
-OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后创建 [TOKEN](https://beta.openai.com/account/api-keys)  
+OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后创建 [Secret Key](https://platform.openai.com/account/api-keys)  
 注意，不是 `Cookie Token`, 是 `api-key`  
 另外，可以直连，不需要代理，只是注册账号的时候需要代理   
 
@@ -35,7 +35,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 *   `question_prefix` 问答模型触发前缀, 默认 `Q&A`
 *   `reload_prefix` 重载配置触发前缀, 默认 `openai-reload`
 *   `stop` 停止聊天或问答, 默认 `stop`
-*   `token` [OPENAI_TOKEN](https://beta.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用编辑文件
+*   `token` [Secret Key](https://platform.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用编辑文件
 *   `error_reply` 发生错误时回复用户，默认 `true`
 *   `end_reply` 停止聊天时回复用户，默认 `false`
 *   `chat_limit` 聊天服务个数限制
@@ -70,10 +70,10 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 ### 测试
 
 在线测试  
-<https://beta.openai.com/playground>
+<https://platform.openai.com/playground>
 
 官方例子  
-<https://beta.openai.com/examples>
+<https://platform.openai.com/examples>
 
 ## 安装
 

@@ -6,12 +6,12 @@ import io.ktor.http.*
 import xyz.cssxsh.openai.*
 
 /**
- * [Edits](https://beta.openai.com/docs/api-reference/edits)
+ * [Edits](https://platform.openai.com/docs/api-reference/edits)
  */
 public class EditController(private val client: OpenAiClient) {
 
     /**
-     * [Create edit](https://beta.openai.com/docs/api-reference/edits/create)
+     * [Create edit](https://platform.openai.com/docs/api-reference/edits/create)
      */
     public suspend fun create(request: EditRequest): EditInfo {
         val response = client.http.post("https://api.openai.com/v1/edits") {
@@ -23,7 +23,7 @@ public class EditController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create edit](https://beta.openai.com/docs/api-reference/edits/create)
+     * [Create edit](https://platform.openai.com/docs/api-reference/edits/create)
      */
     public suspend fun create(model: String, block: EditRequest.Builder.() -> Unit): EditInfo {
         return create(request = EditRequest.Builder(model = model).apply(block).build())

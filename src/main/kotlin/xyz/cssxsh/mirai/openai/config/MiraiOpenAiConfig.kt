@@ -23,7 +23,7 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     override val timeout: Long by value(30_000L)
 
     @ValueName("token")
-    @ValueDescription("OPENAI_TOKEN https://beta.openai.com/account/api-keys")
+    @ValueDescription("OPENAI_TOKEN https://platform.openai.com/account/api-keys")
     override val token: String by value(System.getenv("OPENAI_TOKEN").orEmpty())
 
     @ValueName("error_reply")

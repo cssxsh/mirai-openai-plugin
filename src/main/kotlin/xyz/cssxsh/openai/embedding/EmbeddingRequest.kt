@@ -4,9 +4,9 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param model [create-model](https://beta.openai.com/docs/api-reference/embeddings/create#embeddings/create-model)
- * @param input [create-input](https://beta.openai.com/docs/api-reference/embeddings/create#embeddings/create-input)
- * @param user [create-user](https://beta.openai.com/docs/api-reference/embeddings/create#embeddings/create-user)
+ * @param model [create-model](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings/create-model)
+ * @param input [create-input](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings/create-input)
+ * @param user [create-user](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings/create-user)
  */
 @Serializable
 public data class EmbeddingRequest(

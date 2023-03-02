@@ -7,12 +7,12 @@ import io.ktor.http.*
 import xyz.cssxsh.openai.*
 
 /**
- * [Images](https://beta.openai.com/docs/api-reference/images)
+ * [Images](https://platform.openai.com/docs/api-reference/images)
  */
 public class ImageController(private val client: OpenAiClient) {
 
     /**
-     * [Create image](https://beta.openai.com/docs/api-reference/images/create)
+     * [Create image](https://platform.openai.com/docs/api-reference/images/create)
      */
     public suspend fun create(request: ImageRequest): ImageInfo {
         val response = client.http.post("https://api.openai.com/v1/images/generations") {
@@ -24,14 +24,14 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image](https://beta.openai.com/docs/api-reference/images/create)
+     * [Create image](https://platform.openai.com/docs/api-reference/images/create)
      */
     public suspend fun create(prompt: String, block: ImageRequest.Builder.() -> Unit): ImageInfo {
         return create(request = ImageRequest.Builder(prompt = prompt).apply(block).build())
     }
 
     /**
-     * [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
+     * [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
      */
     public suspend fun createEdit(image: InputProvider, mask: InputProvider? = null, request: ImageRequest): ImageInfo {
         val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/edits", formData {
@@ -48,7 +48,7 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
+     * [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
      */
     public suspend fun createEdit(
         image: InputProvider,
@@ -64,7 +64,7 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
+     * [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
      */
     public suspend fun createVariation(image: InputProvider, request: ImageRequest): ImageInfo {
         val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/variations", formData {
@@ -79,7 +79,7 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
+     * [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
      */
     public suspend fun createVariation(
         image: InputProvider,

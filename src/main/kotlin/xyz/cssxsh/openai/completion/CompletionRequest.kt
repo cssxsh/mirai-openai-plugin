@@ -4,22 +4,22 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param model [create-model](https://beta.openai.com/docs/api-reference/completions/create#completions/create-model)
- * @param prompt [create-prompt](https://beta.openai.com/docs/api-reference/completions/create#completions/create-prompt)
- * @param suffix [create-suffix](https://beta.openai.com/docs/api-reference/completions/create#completions/create-suffix)
- * @param maxTokens [create-max_tokens](https://beta.openai.com/docs/api-reference/completions/create#completions/create-max_tokens)
- * @param temperature [create-temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature)
- * @param topP [create-top_p](https://beta.openai.com/docs/api-reference/completions/create#completions/create-top_p)
- * @param number [create-n](https://beta.openai.com/docs/api-reference/completions/create#completions/create-n)
- * @param stream [create-stream](https://beta.openai.com/docs/api-reference/completions/create#completions/create-stream)
- * @param logprobs [create-logprobs](https://beta.openai.com/docs/api-reference/completions/create#completions/create-logprobs)
- * @param echo [create-echo](https://beta.openai.com/docs/api-reference/completions/create#completions/create-echo)
- * @param stop [create-stop](https://beta.openai.com/docs/api-reference/completions/create#completions/create-stop)
- * @param presencePenalty [create-presence_penalty](https://beta.openai.com/docs/api-reference/completions/create#completions/create-presence_penalty)
- * @param frequencyPenalty [create-frequency_penalty](https://beta.openai.com/docs/api-reference/completions/create#completions/create-frequency_penalty)
- * @param bestOf [create-best_of](https://beta.openai.com/docs/api-reference/completions/create#completions/create-best_of)
- * @param logitBias [create-logit_bias](https://beta.openai.com/docs/api-reference/completions/create#completions/create-logit_bias)
- * @param user [create-user](https://beta.openai.com/docs/api-reference/completions/create#completions/create-user)
+ * @param model [create-model](https://platform.openai.com/docs/api-reference/completions/create#completions/create-model)
+ * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/completions/create#completions/create-prompt)
+ * @param suffix [create-suffix](https://platform.openai.com/docs/api-reference/completions/create#completions/create-suffix)
+ * @param maxTokens [create-max_tokens](https://platform.openai.com/docs/api-reference/completions/create#completions/create-max_tokens)
+ * @param temperature [create-temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature)
+ * @param topP [create-top_p](https://platform.openai.com/docs/api-reference/completions/create#completions/create-top_p)
+ * @param number [create-n](https://platform.openai.com/docs/api-reference/completions/create#completions/create-n)
+ * @param stream [create-stream](https://platform.openai.com/docs/api-reference/completions/create#completions/create-stream)
+ * @param logprobs [create-logprobs](https://platform.openai.com/docs/api-reference/completions/create#completions/create-logprobs)
+ * @param echo [create-echo](https://platform.openai.com/docs/api-reference/completions/create#completions/create-echo)
+ * @param stop [create-stop](https://platform.openai.com/docs/api-reference/completions/create#completions/create-stop)
+ * @param presencePenalty [create-presence_penalty](https://platform.openai.com/docs/api-reference/completions/create#completions/create-presence_penalty)
+ * @param frequencyPenalty [create-frequency_penalty](https://platform.openai.com/docs/api-reference/completions/create#completions/create-frequency_penalty)
+ * @param bestOf [create-best_of](https://platform.openai.com/docs/api-reference/completions/create#completions/create-best_of)
+ * @param logitBias [create-logit_bias](https://platform.openai.com/docs/api-reference/completions/create#completions/create-logit_bias)
+ * @param user [create-user](https://platform.openai.com/docs/api-reference/completions/create#completions/create-user)
  */
 @Serializable
 public data class CompletionRequest(

@@ -4,12 +4,12 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param model [create-model](https://beta.openai.com/docs/api-reference/edits/create#edits/create-model)
- * @param input [create-input](https://beta.openai.com/docs/api-reference/edits/create#edits/create-input)
- * @param instruction [create-suffix](https://beta.openai.com/docs/api-reference/edits/create#edits/create-instruction)
- * @param number [create-n](https://beta.openai.com/docs/api-reference/edits/create#edits/create-n)
- * @param temperature [create-temperature](https://beta.openai.com/docs/api-reference/edits/create#edits/create-temperature)
- * @param topP [create-top_p](https://beta.openai.com/docs/api-reference/edits/create#edits/create-top_p)
+ * @param model [create-model](https://platform.openai.com/docs/api-reference/edits/create#edits/create-model)
+ * @param input [create-input](https://platform.openai.com/docs/api-reference/edits/create#edits/create-input)
+ * @param instruction [create-suffix](https://platform.openai.com/docs/api-reference/edits/create#edits/create-instruction)
+ * @param number [create-n](https://platform.openai.com/docs/api-reference/edits/create#edits/create-n)
+ * @param temperature [create-temperature](https://platform.openai.com/docs/api-reference/edits/create#edits/create-temperature)
+ * @param topP [create-top_p](https://platform.openai.com/docs/api-reference/edits/create#edits/create-top_p)
  */
 @Serializable
 public data class EditRequest(

@@ -4,11 +4,11 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param prompt [create-prompt](https://beta.openai.com/docs/api-reference/images/create#images/create-prompt)
- * @param number [create-input](https://beta.openai.com/docs/api-reference/images/create#images/create-n)
- * @param size [create-size](https://beta.openai.com/docs/api-reference/images/create#images/create-size)
- * @param format [create-response_format](https://beta.openai.com/docs/api-reference/images/create#images/create-response_format)
- * @param user [create-user](https://beta.openai.com/docs/api-reference/images/create#images/create-user)
+ * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/images/create#images/create-prompt)
+ * @param number [create-input](https://platform.openai.com/docs/api-reference/images/create#images/create-n)
+ * @param size [create-size](https://platform.openai.com/docs/api-reference/images/create#images/create-size)
+ * @param format [create-response_format](https://platform.openai.com/docs/api-reference/images/create#images/create-response_format)
+ * @param user [create-user](https://platform.openai.com/docs/api-reference/images/create#images/create-user)
  */
 @Serializable
 public data class ImageRequest(
