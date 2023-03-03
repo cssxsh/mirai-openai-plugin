@@ -195,15 +195,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
                 logger.debug { "${chat.model} - ${chat.usage}" }
                 val reply = chat.choices.first()
-                buffer.add(reply.message ?: ChoiceMessage(
+                val message = reply.message ?: ChoiceMessage(
                     role = "assistant",
                     content = reply.text
-                ))
+                )
+                buffer.add(message)
                 if (chat.usage.totalTokens > ChatConfig.maxTokens * 0.96) {
                     buffer.removeFirstOrNull()
                 }
                 launch {
-                    event.subject.sendMessage(next.quote() + reply.text.removePrefix("\n\n"))
+                    event.subject.sendMessage(next.quote() + message.content)
                 }
                 when (reply.finishReason) {
                     "length" -> logger.warning { "max_tokens not enough for ${next.quote()} " }
