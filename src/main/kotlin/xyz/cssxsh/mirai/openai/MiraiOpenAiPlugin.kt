@@ -17,7 +17,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-openai-plugin",
         name = "mirai-openai-plugin",
-        version = "1.2.0",
+        version = "1.2.1",
     ) {
         author("cssxsh")
     }
