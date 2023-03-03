@@ -1,3 +1,7 @@
+## 1.2.1 (23/03/03)
+
+1.  fix：chat reply
+
 ## 1.2.0 (23/03/03)
 
 1.  fix: finishReason close #11
