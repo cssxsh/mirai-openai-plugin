@@ -69,8 +69,8 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
-        public fun MutableList<ChoiceMessage>.append(role: String, content: String) {
-            add(ChoiceMessage(role = role, content = content))
+        public fun MutableList<ChoiceMessage>.append(role: String, content: String): Boolean {
+            return add(ChoiceMessage(role = role, content = content))
         }
 
         @OpenAiDsl

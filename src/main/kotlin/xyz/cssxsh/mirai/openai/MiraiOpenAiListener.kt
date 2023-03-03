@@ -183,8 +183,13 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
 
+                buffer.add(ChoiceMessage(
+                    role = "user",
+                    content = content
+                ))
+
                 val chat = client.chat.create(model = "gpt-3.5-turbo-0301") {
-                    buffer.append("user", content)
+                    messages(buffer)
                     user(event.senderName)
                     ChatConfig.push(this)
                 }
