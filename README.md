@@ -10,7 +10,8 @@ Be based on <https://chat.openai.com/>
 OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后创建 [Secret Key](https://platform.openai.com/account/api-keys)  
 注意，不是 `Cookie Token`, 是 `api-key`  
 ~~另外，可以直连，不需要代理，只是注册账号的时候需要代理~~   
-`api.openai.com` 已列入黑名单，你需要配置代理
+`api.openai.com` 已列入黑名单，你需要配置代理  
+如果没有配置，本插件会尝试做一些特殊处理，一般情况下也能正常使用
 
 开启聊天默认使用 `chat` (chat_prefix) 触发  
 开启问答默认使用 `Q&A` (question_prefix) 触发  
@@ -19,7 +20,8 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 默认情况下 `权限检查` 是关闭的, 需要在基本配置中配置开启(会在日志中给出权限ID)  
 
 **Since 1.1.0** 添加 `@` 触发聊天配置(手机端回复消息时会附带@, 请注意不要误触)  
-**Since 1.2.0** 将 `chat` 功能对接至 <https://platform.openai.com/docs/api-reference/chat>, 节省 Usage
+**Since 1.2.0** 将 `chat` 功能对接至 <https://platform.openai.com/docs/api-reference/chat>, 节省 Usage  
+**Since 1.2.2** Fake SSLSocket
 
 ## 效果
 

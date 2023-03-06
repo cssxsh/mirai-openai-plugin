@@ -17,7 +17,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-openai-plugin",
         name = "mirai-openai-plugin",
-        version = "1.2.1",
+        version = "1.2.2",
     ) {
         author("cssxsh")
     }
@@ -47,7 +47,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         for (config in config) config.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
-            val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OPENAI_TOKEN") }
+            val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OpenAI Secret Key") }
 
             @OptIn(ConsoleExperimentalApi::class)
             @Suppress("UNCHECKED_CAST")
@@ -62,6 +62,10 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
             folder.mkdirs()
             value.value = folder.absolutePath
         }
+        if (MiraiOpenAiConfig.proxy.isNotEmpty()) {
+            logger.info { "代理已配置: ${MiraiOpenAiConfig.proxy}" }
+        }
+
         for (config in config) config.save()
 
         for (listener in listeners) (listener as SimpleListenerHost).registerTo(globalEventChannel())
