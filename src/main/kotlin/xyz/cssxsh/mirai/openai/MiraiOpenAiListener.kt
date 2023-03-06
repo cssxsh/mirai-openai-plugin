@@ -111,8 +111,8 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 client.clearToken()
                 "OPENAI 配置已重载".toPlainText()
             }
-            message.findIsInstance<At>()?.target == bot.id
-                && (MiraiOpenAiConfig.chatByAt || toCommandSender().hasPermission(chat))
+            message.findIsInstance<At>()?.target == bot.id && MiraiOpenAiConfig.chatByAt
+                && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(chat))
             -> if (lock.size >= MiraiOpenAiConfig.limit) {
                 "聊天服务已开启过多，请稍后重试".toPlainText()
             } else {
