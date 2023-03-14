@@ -25,6 +25,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly("xyz.cssxsh.mirai:mirai-economy-core:1.0.6")
+    compileOnly("xyz.cssxsh.mirai:mirai-hibernate-plugin:2.7.1")
     testImplementation(kotlin("test"))
     //
     implementation(platform("net.mamoe:mirai-bom:2.14.0"))

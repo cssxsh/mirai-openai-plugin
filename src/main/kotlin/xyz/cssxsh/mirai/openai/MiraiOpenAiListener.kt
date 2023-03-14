@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
+import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
@@ -18,6 +19,7 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.openai.config.*
+import xyz.cssxsh.mirai.openai.data.*
 import xyz.cssxsh.openai.*
 import xyz.cssxsh.openai.image.*
 import java.io.File
@@ -125,6 +127,13 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun completion(event: MessageEvent): Message {
+        if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
+            return buildMessageChain {
+                appendLine("你的 Tokens 不足")
+                append(At(event.sender))
+            }
+        }
+
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.completion)
 
@@ -136,6 +145,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             CompletionConfig.push(this)
         }
         logger.debug { "${completion.model} - ${completion.usage}" }
+        launch {
+            MiraiOpenAiTokensData.minusAssign(event.sender, completion.usage.totalTokens)
+        }
+
         return buildMessageChain {
             add(event.message.quote())
             for (choice in completion.choices) {
@@ -179,6 +192,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 content = system
             ))
             while (isActive) {
+                if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
+                    launch {
+                        event.subject.sendMessage(buildMessageChain {
+                            appendLine("你的 Tokens 不足")
+                            append(At(event.sender))
+                        })
+                    }
+                    break
+                }
+
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
@@ -194,6 +217,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     ChatConfig.push(this)
                 }
                 logger.debug { "${chat.model} - ${chat.usage}" }
+                launch {
+                    MiraiOpenAiTokensData.minusAssign(event.sender, chat.usage.totalTokens)
+                }
+
                 val reply = chat.choices.first()
                 val message = reply.message ?: ChoiceMessage(
                     role = "assistant",
@@ -236,6 +263,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             val buffer = StringBuffer(prompt)
             buffer.append('\n')
             while (isActive) {
+                if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
+                    launch {
+                        event.subject.sendMessage(buildMessageChain {
+                            appendLine("你的 Tokens 不足")
+                            append(At(event.sender))
+                        })
+                    }
+                    break
+                }
+
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true)
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
@@ -256,6 +293,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     stop("\n")
                 }
                 logger.debug { "${completion.model} - ${completion.usage}" }
+                launch {
+                    MiraiOpenAiTokensData.minusAssign(event.sender, completion.usage.totalTokens)
+                }
+
                 val reply = completion.choices.first()
                 buffer.append(reply.text).append('\n')
                 launch {
@@ -306,6 +347,36 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 target
             }
             else -> throw IllegalArgumentException("data is empty")
+        }
+    }
+
+    @EventHandler
+    fun GroupMessageEvent.economy() {
+        if (MiraiOpenAiTokensData.economy.not()) return
+        if (sender.isOperator().not()) return
+        val match = """tokens\s*(\d+)""".toRegex().find(message.contentToString()) ?: return
+        val (quantity) = match.destructured
+        val user = message.firstIsInstanceOrNull<At>()?.let { group[it.target] } ?: sender
+        launch {
+            MiraiOpenAiTokensData.plusAssign(user, quantity.toInt())
+            val balance = MiraiOpenAiTokensData.balance(user)
+            group.sendMessage(buildMessageChain {
+                appendLine("你拥有了 $balance OpenAiTokens")
+                append(At(user))
+            })
+        }
+    }
+
+    @EventHandler
+    fun SignEvent.economy() {
+        if (MiraiOpenAiTokensData.economy.not()) return
+        val member = user as? NormalMember ?: return
+        MiraiOpenAiTokensData.plusAssign(member, 1024)
+        launch {
+            member.group.sendMessage(buildMessageChain {
+                appendLine("你获得了 1024 OpenAiTokens")
+                append(At(user))
+            })
         }
     }
 }

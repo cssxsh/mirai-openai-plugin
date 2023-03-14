@@ -9,6 +9,7 @@ import net.mamoe.mirai.console.util.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.openai.config.*
+import xyz.cssxsh.mirai.openai.data.*
 
 /**
  * mirai-openai-plugin 插件主类
@@ -24,26 +25,12 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
 ) {
 
     @PublishedApi
-    internal val config: List<PluginConfig> by spi()
+    internal val config: List<PluginConfig> by services()
 
     @PublishedApi
-    internal val listeners: List<ListenerHost> by spi()
-
-    @Suppress("INVISIBLE_MEMBER")
-    private inline fun <reified T : Any> spi(): Lazy<List<T>> = lazy {
-        with(net.mamoe.mirai.console.internal.util.PluginServiceHelper) {
-            jvmPluginClasspath.pluginClassLoader
-                .findServices<T>()
-                .loadAllServices()
-        }
-    }
+    internal val listeners: List<ListenerHost> by services()
 
     override fun onEnable() {
-        // XXX: mirai console version check
-        check(SemVersion.parseRangeRequirement(">= 2.12.0-RC").test(MiraiConsole.version)) {
-            "$name $version 需要 Mirai-Console 版本 >= 2.12.0，目前版本是 ${MiraiConsole.version}"
-        }
-
         for (config in config) config.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
@@ -69,6 +56,10 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         for (config in config) config.save()
 
         for (listener in listeners) (listener as SimpleListenerHost).registerTo(globalEventChannel())
+
+        if (MiraiOpenAiTokensData.economy) {
+            logger.info { "经济系统已接入" }
+        }
 
         if (MiraiOpenAiConfig.permission) {
             logger.info { "权限检查已开启" }
