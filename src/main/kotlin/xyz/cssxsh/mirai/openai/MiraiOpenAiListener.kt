@@ -239,10 +239,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
         }.invokeOnCompletion { cause ->
             lock.remove(event.sender.id)
-            logger.debug { "聊天已终止" }
-            if (cause != null) {
-                val exception = ExceptionInEventHandlerException(event = event, cause = cause)
-                handleException(coroutineContext, exception)
+            when (cause) {
+                null -> Unit
+                is TimeoutCancellationException -> logger.info { "聊天已终止 ${event.sender}" }
+                else -> handleException(coroutineContext, ExceptionInEventHandlerException(event, cause = cause))
             }
             if (MiraiOpenAiConfig.bye) {
                 launch {
@@ -336,10 +336,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
         }.invokeOnCompletion { cause ->
             lock.remove(event.sender.id)
-            logger.debug { "问答已终止" }
-            if (cause != null) {
-                val exception = ExceptionInEventHandlerException(event = event, cause = cause)
-                handleException(coroutineContext, exception)
+            when (cause) {
+                null -> Unit
+                is TimeoutCancellationException -> logger.info { "问答已终止 ${event.sender}" }
+                else -> handleException(coroutineContext, ExceptionInEventHandlerException(event, cause = cause))
             }
             if (MiraiOpenAiConfig.bye) {
                 launch {
