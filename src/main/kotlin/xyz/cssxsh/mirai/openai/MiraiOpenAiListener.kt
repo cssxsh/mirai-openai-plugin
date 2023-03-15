@@ -38,6 +38,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     internal val chat: Permission by MiraiOpenAiPermissions
     internal val question: Permission by MiraiOpenAiPermissions
     internal val reload: Permission by MiraiOpenAiPermissions
+    internal val economy: Permission by MiraiOpenAiPermissions
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         when (exception) {
@@ -353,8 +354,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     @EventHandler
     fun GroupMessageEvent.economy() {
         if (MiraiOpenAiTokensData.economy.not()) return
-        if (sender.isOperator().not()) return
-        val match = """tokens\s*(\d+)""".toRegex().find(message.contentToString()) ?: return
+        if (MiraiOpenAiConfig.permission.not() && sender.isOperator().not()) return
+        if (MiraiOpenAiConfig.permission && toCommandSender().hasPermission(economy).not()) return
+        val match = """${MiraiOpenAiConfig.tokens}\s*(\d+)""".toRegex().find(message.contentToString()) ?: return
         val (quantity) = match.destructured
         val user = message.firstIsInstanceOrNull<At>()?.let { group[it.target] } ?: sender
         launch {

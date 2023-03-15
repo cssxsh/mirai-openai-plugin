@@ -58,6 +58,10 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("重载配置触发前缀")
     val reload: String by value("openai-reload")
 
+    @ValueName("economy_set_prefix")
+    @ValueDescription("经济设置触发前缀")
+    val tokens: String by value("tokens")
+
     @ValueName("stop")
     @ValueDescription("停止聊天或问答")
     val stop: String by value("stop")

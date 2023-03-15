@@ -68,6 +68,7 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
             MiraiOpenAiListener.chat
             MiraiOpenAiListener.question
             MiraiOpenAiListener.reload
+            MiraiOpenAiListener.economy
         } else {
             logger.info { "权限检查未开启" }
         }
