@@ -2,6 +2,7 @@ package xyz.cssxsh.openai
 
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.condition.*
 import xyz.cssxsh.openai.image.*
 
 internal class OpenAiClientTest {
@@ -26,6 +27,7 @@ internal class OpenAiClientTest {
     }
 
     @Test
+    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun completions(): Unit = runBlocking {
         val model = "text-davinci-003"
         val completion = client.completion.create(model) {
@@ -51,5 +53,20 @@ internal class OpenAiClientTest {
     @Test
     fun files(): Unit = runBlocking {
         val files = client.file.list()
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
+    fun chat(): Unit = runBlocking {
+        val model = "gpt-3.5-turbo-0301"
+        val chat = client.chat.create(model) {
+            messages {
+                user(content = "Hello!")
+            }
+        }
+
+        Assertions.assertEquals(model, chat.model)
+        Assertions.assertFalse(chat.choices.isEmpty())
+        Assertions.assertNotNull(chat.choices.first().message)
     }
 }
