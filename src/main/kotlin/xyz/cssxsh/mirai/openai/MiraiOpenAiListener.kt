@@ -194,13 +194,15 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
             .ifEmpty { MiraiOpenAiPrompts.prompt(id = event.sender.id) }
+        lock[event.sender.id] = event
+        val buffer = mutableListOf<ChoiceMessage>()
+        buffer.add(ChoiceMessage(role = "system", content = system))
+        val message = if (ChatConfig.atOnce) {
+            send(event = event, buffer = buffer)
+        } else {
+            "聊天将开始"
+        }
         launch {
-            lock[event.sender.id] = event
-            val buffer = mutableListOf<ChoiceMessage>()
-            buffer.add(ChoiceMessage(
-                role = "system",
-                content = system
-            ))
             while (isActive) {
                 if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
                     launch {
@@ -216,36 +218,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 val content = next.contentToString()
                 if (content == MiraiOpenAiConfig.stop) break
 
-                buffer.add(ChoiceMessage(
-                    role = "user",
-                    content = content
-                ))
+                buffer.add(ChoiceMessage(role = "user", content = content))
 
-                val chat = client.chat.create(model = "gpt-3.5-turbo-0301") {
-                    messages(buffer)
-                    user(event.senderName)
-                    ChatConfig.push(this)
-                }
-                logger.debug { "${chat.model} - ${chat.usage}" }
+                val reply = send(event = event, buffer = buffer)
                 launch {
-                    MiraiOpenAiTokensData.minusAssign(event.sender, chat.usage.totalTokens)
-                }
-
-                val reply = chat.choices.first()
-                val message = reply.message ?: ChoiceMessage(
-                    role = "assistant",
-                    content = reply.text
-                )
-                buffer.add(message)
-                if (chat.usage.totalTokens > ChatConfig.maxTokens * 0.96) {
-                    buffer.removeFirstOrNull()
-                }
-                launch {
-                    event.subject.sendMessage(next.quote() + message.content)
-                }
-                when (reply.finishReason) {
-                    "length" -> logger.warning { "max_tokens not enough for ${next.quote()} " }
-                    else -> Unit
+                    event.subject.sendMessage(next.quote() + reply)
                 }
             }
         }.invokeOnCompletion { cause ->
@@ -262,16 +239,50 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
         }
 
-        return event.message.quote() + "聊天将开始"
+        return event.message.quote() + message
+    }
+
+    private suspend fun send(event: MessageEvent, buffer: MutableList<ChoiceMessage>): String {
+        val chat = client.chat.create(model = "gpt-3.5-turbo") {
+            messages(buffer)
+            user(event.senderName)
+            ChatConfig.push(this)
+        }
+        logger.debug { "${chat.model} - ${chat.usage}" }
+        launch {
+            MiraiOpenAiTokensData.minusAssign(event.sender, chat.usage.totalTokens)
+        }
+
+        val reply = chat.choices.first()
+        val message = reply.message ?: ChoiceMessage(
+            role = "assistant",
+            content = reply.text
+        )
+        buffer.add(message)
+        if (chat.usage.totalTokens > ChatConfig.maxTokens * 0.96) {
+            if (buffer.size > 2) buffer.removeAt(1)
+        }
+
+        when (reply.finishReason) {
+            "length" -> logger.warning { "max_tokens not enough for ${event.sender} " }
+            else -> Unit
+        }
+
+        return message.content
     }
 
     private suspend fun question(event: MessageEvent): Message {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.question)
+        lock[event.sender.id] = event
+        val buffer = StringBuffer(prompt)
+        buffer.append('\n')
+        val message = if (QuestionConfig.atOnce) {
+            send(event = event, buffer = buffer)
+        } else {
+            "聊天将开始"
+        }
         launch {
-            lock[event.sender.id] = event
-            val buffer = StringBuffer(prompt)
-            buffer.append('\n')
             while (isActive) {
                 if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
                     launch {
@@ -296,25 +307,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
 
                 logger.verbose { "prompt: $buffer" }
 
-                val completion = client.completion.create(model = "text-davinci-003") {
-                    prompt(buffer.toString())
-                    user(event.senderName)
-                    QuestionConfig.push(this)
-                    stop("\n")
-                }
-                logger.debug { "${completion.model} - ${completion.usage}" }
+                val reply = send(event = event, buffer = buffer)
                 launch {
-                    MiraiOpenAiTokensData.minusAssign(event.sender, completion.usage.totalTokens)
-                }
-
-                val reply = completion.choices.first()
-                buffer.append(reply.text).append('\n')
-                launch {
-                    event.subject.sendMessage(next.quote() + reply.text)
-                }
-                when (reply.finishReason) {
-                    "length" -> logger.warning { "max_tokens not enough for ${next.quote()} " }
-                    else -> Unit
+                    event.subject.sendMessage(next.quote() + reply)
                 }
             }
         }.invokeOnCompletion { cause ->
@@ -331,7 +326,30 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
         }
 
-        return event.message.quote() + "问答将开始"
+        return event.message.quote() + message
+    }
+
+    private suspend fun send(event: MessageEvent, buffer: StringBuffer): String {
+        val completion = client.completion.create(model = "text-davinci-003") {
+            prompt(buffer.toString())
+            user(event.senderName)
+            QuestionConfig.push(this)
+            stop("\n")
+        }
+        logger.debug { "${completion.model} - ${completion.usage}" }
+        launch {
+            MiraiOpenAiTokensData.minusAssign(event.sender, completion.usage.totalTokens)
+        }
+
+        val reply = completion.choices.first()
+        buffer.append(reply.text).append('\n')
+
+        when (reply.finishReason) {
+            "length" -> logger.warning { "max_tokens not enough for ${event.sender} " }
+            else -> Unit
+        }
+
+        return reply.text
     }
 
     private suspend fun store(item: ImageInfo.Data, folder: File): File {
