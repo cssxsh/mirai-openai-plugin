@@ -1,3 +1,8 @@
+## 1.3.0 (23/03/15)
+
+1.  feat: tokens economy
+2.  feat: bind prompts
+
 ## 1.2.3 (23/03/07)
 
 1.  fix：at chat 修复持有权限时AT一定会触发 `chat` 的问题
