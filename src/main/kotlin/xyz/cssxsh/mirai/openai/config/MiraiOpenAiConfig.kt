@@ -70,6 +70,14 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("停止聊天或问答")
     val stop: String by value("stop")
 
+    @ValueName("keep_prefix_check")
+    @ValueDescription("保持前缀检查")
+    val prefix: Boolean by value(false)
+
+    @ValueName("at_once")
+    @ValueDescription("立刻开始聊天/问答")
+    val atOnce: Boolean by value(false)
+
     @ValueName("image_folder")
     @ValueDescription("图片生成缓存文件夹")
     val folder: String by value("run")

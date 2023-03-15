@@ -35,10 +35,6 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
     @ValueDescription("Frequency Penalty")
     val frequencyPenalty: Double by value(0.0)
 
-    @ValueName("at_once")
-    @ValueDescription("Frequency Penalty")
-    val atOnce: Boolean by value(false)
-
     fun push(builder: ChatRequest.Builder) {
         builder.model = model
         builder.maxTokens = maxTokens

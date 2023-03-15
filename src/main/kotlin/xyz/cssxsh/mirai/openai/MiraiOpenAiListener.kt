@@ -197,7 +197,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         lock[event.sender.id] = event
         val buffer = mutableListOf<ChoiceMessage>()
         buffer.add(ChoiceMessage(role = "system", content = system))
-        val message = if (ChatConfig.atOnce) {
+        val message = if (MiraiOpenAiConfig.atOnce) {
             send(event = event, buffer = buffer)
         } else {
             "聊天将开始"
@@ -215,8 +215,19 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
 
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true)
-                val content = next.contentToString()
-                if (content == MiraiOpenAiConfig.stop) break
+                val text = next.contentToString()
+                if (text == MiraiOpenAiConfig.stop) break
+
+                val content = if (MiraiOpenAiConfig.prefix) {
+                    if ((next.findIsInstance<At>()?.target == event.bot.id && MiraiOpenAiConfig.chatByAt) ||
+                        text.startsWith(MiraiOpenAiConfig.chat)) {
+                        text.removePrefix(MiraiOpenAiConfig.chat)
+                    } else {
+                        continue
+                    }
+                } else {
+                    text
+                }
 
                 buffer.add(ChoiceMessage(role = "user", content = content))
 
@@ -277,7 +288,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         lock[event.sender.id] = event
         val buffer = StringBuffer(prompt)
         buffer.append('\n')
-        val message = if (QuestionConfig.atOnce) {
+        val message = if (MiraiOpenAiConfig.atOnce) {
             send(event = event, buffer = buffer)
         } else {
             "聊天将开始"
@@ -295,10 +306,19 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
 
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true)
-                val content = next.contentToString()
-                if (content == MiraiOpenAiConfig.stop) break
+                val text = next.contentToString()
+                if (text == MiraiOpenAiConfig.stop) break
+                val content = if (MiraiOpenAiConfig.prefix) {
+                    if (text.startsWith(MiraiOpenAiConfig.question)) {
+                        text.removePrefix(MiraiOpenAiConfig.question)
+                    } else {
+                        continue
+                    }
+                } else {
+                    text
+                }
 
-                if (buffer.length > ChatConfig.maxTokens * 0.6) {
+                if (buffer.length > QuestionConfig.maxTokens * 2) {
                     buffer.delete(prompt.length + 1, buffer.lastIndexOf("Human: "))
                 }
 
