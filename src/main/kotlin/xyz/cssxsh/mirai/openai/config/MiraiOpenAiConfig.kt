@@ -62,6 +62,10 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("经济设置触发前缀")
     val tokens: String by value("tokens")
 
+    @ValueName("bind_set_prefix")
+    @ValueDescription("重载配置触发前缀")
+    val bind: String by value("bind")
+
     @ValueName("stop")
     @ValueDescription("停止聊天或问答")
     val stop: String by value("stop")

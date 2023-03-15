@@ -28,10 +28,14 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
     internal val config: List<PluginConfig> by services()
 
     @PublishedApi
+    internal val data: List<PluginData> by services()
+
+    @PublishedApi
     internal val listeners: List<ListenerHost> by services()
 
     override fun onEnable() {
         for (config in config) config.reload()
+        for (config in data) config.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
             val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OpenAI Secret Key") }

@@ -19,15 +19,25 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 停止聊天或问答默认使用 `stop` 触发  
 默认情况下 `权限检查` 是关闭的, 需要在基本配置中配置开启(会在日志中给出权限ID)  
 
+预置 `prompt` (也称语境或人格)  
+用法例子 `chat #猫娘`  
+自定义配置请阅读 [预置语境](#预置语境)
+
 **Since 1.1.0** 添加 `@` 触发聊天配置(手机端回复消息时会附带@, 请注意不要误触)  
 **Since 1.2.0** 将 `chat` 功能对接至 <https://platform.openai.com/docs/api-reference/chat>, 节省 Usage  
 **Since 1.2.2** Fake SSLSocket
+**Since 1.3.0** 添加经济系统对接 和 预置语境
 
 ## 效果
 
+聊天  
 ![chat](example/screenshot/chat.jpg)
+问答  
 ![completion](example/screenshot/completion.jpg)
+图片  
 ![image](example/screenshot/image.jpg)
+预置语境  
+![bind](example/screenshot/bind.png)
 
 ## 配置
 
@@ -39,6 +49,8 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 *   `chat_prefix` 聊天模型触发前缀, 默认 `chat`
 *   `question_prefix` 问答模型触发前缀, 默认 `Q&A`
 *   `reload_prefix` 重载配置触发前缀, 默认 `openai-reload`
+*   `economy_set_prefix` 经济设置触发前缀, 默认 `tokens`
+*   `bind_set_prefix` 绑定设置触发前缀, 默认 `bind`
 *   `stop` 停止聊天或问答, 默认 `stop`
 *   `token` [Secret Key](https://platform.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用编辑文件
 *   `error_reply` 发生错误时回复用户，默认 `true`
@@ -80,6 +92,26 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 
 官方例子  
 <https://platform.openai.com/examples>
+
+## 对接经济系统
+
+@see <https://github.com/cssxsh/mirai-economy-core>
+
+`openai.com` 通过 `tokens`, 分词数量（一般来说句子越长，分词越长）来计算费用。  
+为了防止某些用户过度消耗 `tokens`, 导致额度耗尽。  
+对接后，经济系统将为每个用户计算 `tokens` 额度，个人的可用 `tokens` 为 `0` 时，聊天功能将拒绝响应并提示。
+
+`管理员`(未开启权限检查)或者`持有经济权限的人`(已开启权限检查) 可用为用户设置 `tokens` 额度
+
+## 预置语境
+
+有些人也将其形容为 `人格`, 实际上这个功能是告诉机器人你需要扮演什么角色或者提供什么功能  
+
+配置方法, 在插件数据目录 `data/xyz.cssxsh.mirai.plugin.mirai-openai-plugin` 下新键 `XXX.txt`  
+然后填入你需要预置的内容
+
+使用方法，在 `chat` 后面附加 `#XXX`, 例如 `chat #猫娘`  
+或者使用 `bind` 为当前用户绑定一个默认 `prompt`, 例如 `bind 猫娘`
 
 ## 安装
 

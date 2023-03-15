@@ -22,9 +22,8 @@ import xyz.cssxsh.mirai.openai.config.*
 import xyz.cssxsh.mirai.openai.data.*
 import xyz.cssxsh.openai.*
 import xyz.cssxsh.openai.image.*
-import java.io.File
-import java.util.Base64
-import java.util.UUID
+import java.io.*
+import java.util.*
 import kotlin.coroutines.*
 
 @PublishedApi
@@ -185,6 +184,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     private suspend fun chat(event: MessageEvent): Message {
         val system = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.chat)
+            .replace("""#(\S+)""".toRegex()) { match ->
+                val (path) = match.destructured
+                try {
+                    MiraiOpenAiPrompts.prompt(path = path)
+                } catch (exception: FileNotFoundException) {
+                    logger.warning({ "文件不存在" }, exception)
+                    match.value
+                }
+            }
+            .ifEmpty { MiraiOpenAiPrompts.prompt(id = event.sender.id) }
         launch {
             lock[event.sender.id] = event
             val buffer = mutableListOf<ChoiceMessage>()
@@ -378,6 +387,31 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             member.group.sendMessage(buildMessageChain {
                 appendLine("你获得了 1024 OpenAiTokens")
                 append(At(user))
+            })
+        }
+    }
+
+    @EventHandler
+    fun MessageEvent.bind() {
+        if (MiraiOpenAiConfig.permission && toCommandSender().hasPermission(chat).not()) return
+        val content = message.contentToString()
+        if (content.startsWith(MiraiOpenAiConfig.bind).not()) return
+        val path = content
+            .removePrefix(MiraiOpenAiConfig.bind)
+            .trimIndent()
+        val prompt = try {
+            MiraiOpenAiPrompts.bind(id = sender.id, path = path)
+        } catch (_: FileNotFoundException) {
+            launch {
+                subject.sendMessage("文件不存在")
+            }
+            return
+        }
+        launch {
+            subject.sendMessage(buildMessageChain {
+                appendLine("将为你绑定 $path")
+                appendLine()
+                appendLine(prompt)
             })
         }
     }
