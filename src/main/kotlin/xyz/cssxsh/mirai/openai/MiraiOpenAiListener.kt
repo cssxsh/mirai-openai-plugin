@@ -280,7 +280,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> Unit
         }
 
-        return message.content
+        return message.content.trim()
     }
 
     private suspend fun question(event: MessageEvent): Message {
@@ -371,7 +371,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> Unit
         }
 
-        return reply.text
+        return reply.text.trim()
     }
 
     private suspend fun store(item: ImageInfo.Data, folder: File): File {
