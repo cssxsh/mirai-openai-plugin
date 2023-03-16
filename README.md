@@ -28,7 +28,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 **Since 1.1.0** 添加 `@` 触发聊天配置(手机端回复消息时会附带@, 请注意不要误触)  
 **Since 1.2.0** 将 `chat` 功能对接至 <https://platform.openai.com/docs/api-reference/chat>, 节省 Usage  
 **Since 1.2.2** Fake SSLSocket
-**Since 1.3.0** 添加经济系统对接 和 预置语境
+**Since 1.3.0** 添加经济系统对接 和 预置语境  
 **Since 1.3.1** 添加一些可能会带来BUG的配置 `立刻开始聊天`, `保持前缀检查`
 
 ## 效果
