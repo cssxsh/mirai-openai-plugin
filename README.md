@@ -13,11 +13,13 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 `api.openai.com` 已列入黑名单，你需要配置代理  
 如果没有配置，本插件会尝试做一些特殊处理，一般情况下也能正常使用
 
-开启聊天默认使用 `chat` (chat_prefix) 触发  
-开启问答默认使用 `Q&A` (question_prefix) 触发  
+开启聊天默认使用 `chat` (chat_prefix) 触发, 基于 `/v1/chat/completions` 默认模型 `gpt-3.5-turbo`  
+开启问答默认使用 `Q&A` (question_prefix) 触发, 基于 `/v1/completions` 默认模型 `text-davinci-003`  
 开启图片生成默认使用 `?` (image_prefix) 触发  
 停止聊天或问答默认使用 `stop` 触发  
-默认情况下 `权限检查` 是关闭的, 需要在基本配置中配置开启(会在日志中给出权限ID)  
+重载配置默认使用 `openai-reload` (reload_prefix) 触发，使用后将重新加载配置，无需重启 `Mirai Console`
+
+默认情况下 `权限检查` 是关闭的, 需要在基本配置中配置开启 (开启后会在日志中给出权限ID)
 
 预置 `prompt` (也称语境或人格)  
 用法例子 `chat #猫娘`  
@@ -27,6 +29,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 **Since 1.2.0** 将 `chat` 功能对接至 <https://platform.openai.com/docs/api-reference/chat>, 节省 Usage  
 **Since 1.2.2** Fake SSLSocket
 **Since 1.3.0** 添加经济系统对接 和 预置语境
+**Since 1.3.1** 添加一些可能会带来BUG的配置 `立刻开始聊天`, `保持前缀检查`
 
 ## 效果
 
@@ -52,12 +55,14 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 *   `economy_set_prefix` 经济设置触发前缀, 默认 `tokens`
 *   `bind_set_prefix` 绑定设置触发前缀, 默认 `bind`
 *   `stop` 停止聊天或问答, 默认 `stop`
-*   `token` [Secret Key](https://platform.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用编辑文件
+*   `token` [Secret Key](https://platform.openai.com/account/api-keys), 插件第一次启动时会要求输入，不用再次编辑文件
 *   `error_reply` 发生错误时回复用户，默认 `true`
 *   `end_reply` 停止聊天时回复用户，默认 `false`
 *   `chat_limit` 聊天服务个数限制
 *   `chat_by_at` 聊天模型触发于`@`，默认 `false`
-*   `has_permission` 权限检查, 为 `true` 开启
+*   `has_permission` 权限检查, 为 `true` 时开启
+*   `at_once` 立刻开始聊天/问答(即不会发送 `聊天/问答将开始`, 而是直接接着指令开始聊天) 默认 `false`
+*   `keep_prefix_check` 保持前缀检查(即一定要附带前缀/`@`才会触发对话)，默认 `false`
 
 `completion.yml` 自定义模型详细配置
 
@@ -78,6 +83,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 
 `question.yml` 问答模型详细配置
 
+*   `model` 模型
 *   `timeout` 等待停止时间
 *   `max_tokens` 回答长度
 
@@ -101,13 +107,13 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 为了防止某些用户过度消耗 `tokens`, 导致额度耗尽。  
 对接后，经济系统将为每个用户计算 `tokens` 额度，个人的可用 `tokens` 为 `0` 时，聊天功能将拒绝响应并提示。
 
-`管理员`(未开启权限检查)或者`持有经济权限的人`(已开启权限检查) 可用为用户设置 `tokens` 额度
+`管理员(未开启权限检查)` 或者 `持有经济权限的用户(已开启权限检查)` 可用为用户设置 `tokens` 额度
 
 ## 预置语境
 
 有些人也将其形容为 `人格`, 实际上这个功能是告诉机器人你需要扮演什么角色或者提供什么功能  
 
-配置方法, 在插件数据目录 `data/xyz.cssxsh.mirai.plugin.mirai-openai-plugin` 下新键 `XXX.txt`  
+配置方法, 在插件数据目录 `data/xyz.cssxsh.mirai.plugin.mirai-openai-plugin` 下新建 `XXX.txt`  
 然后填入你需要预置的内容
 
 使用方法，在 `chat` 后面附加 `#XXX`, 例如 `chat #猫娘`  

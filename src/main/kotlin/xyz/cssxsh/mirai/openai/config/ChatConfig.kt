@@ -13,7 +13,7 @@ internal object ChatConfig : ReadOnlyPluginConfig("chat") {
 
     @ValueName("gpt_model")
     @ValueDescription("GPT Model")
-    val model: String by value("gpt-3.5-turbo-0301")
+    val model: String by value("gpt-3.5-turbo")
 
     @ValueName("max_tokens")
     @ValueDescription("Maximum length")

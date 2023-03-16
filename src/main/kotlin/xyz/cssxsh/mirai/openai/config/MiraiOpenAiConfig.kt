@@ -63,7 +63,7 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     val tokens: String by value("tokens")
 
     @ValueName("bind_set_prefix")
-    @ValueDescription("重载配置触发前缀")
+    @ValueDescription("绑定设置触发前缀")
     val bind: String by value("bind")
 
     @ValueName("stop")

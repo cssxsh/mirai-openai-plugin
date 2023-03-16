@@ -1,3 +1,9 @@
+## 1.3.1 (23/03/16)
+
+1.  feat: at once
+2.  feat: keep prefix check
+3.  feat: chat end log
+
 ## 1.3.0 (23/03/15)
 
 1.  feat: tokens economy
