@@ -407,14 +407,24 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         if (MiraiOpenAiConfig.permission && toCommandSender().hasPermission(economy).not()) return
         val match = """${MiraiOpenAiConfig.tokens}\s*(\d+)""".toRegex().find(message.contentToString()) ?: return
         val (quantity) = match.destructured
-        val user = message.firstIsInstanceOrNull<At>()?.let { group[it.target] } ?: sender
+        val user = message.firstIsInstanceOrNull<At>()?.let { group[it.target] }
         launch {
-            MiraiOpenAiTokensData.plusAssign(user, quantity.toInt())
-            val balance = MiraiOpenAiTokensData.balance(user)
-            group.sendMessage(buildMessageChain {
-                appendLine("你拥有了 $balance OpenAiTokens")
-                append(At(user))
-            })
+            if (user != null) {
+                MiraiOpenAiTokensData.plusAssign(user, quantity.toInt())
+                val balance = MiraiOpenAiTokensData.balance(user)
+                group.sendMessage(buildMessageChain {
+                    appendLine("你拥有了 $balance OpenAiTokens")
+                    append(At(user))
+                })
+            } else {
+                for (member in group.members) {
+                    MiraiOpenAiTokensData.plusAssign(member, quantity.toInt())
+                    group.sendMessage(buildMessageChain {
+                        appendLine("你们拥有了 $quantity OpenAiTokens")
+                        append(AtAll)
+                    })
+                }
+            }
         }
     }
 
