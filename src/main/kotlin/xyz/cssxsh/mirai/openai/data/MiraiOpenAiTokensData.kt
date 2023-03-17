@@ -9,7 +9,7 @@ public object MiraiOpenAiTokensData {
     @PublishedApi
     internal val economy: Boolean by lazy {
         try {
-            MiraiOpenAiTokens
+            EconomyService.register(MiraiOpenAiTokens)
             true
         } catch (_: Throwable) {
             false
