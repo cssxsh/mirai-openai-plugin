@@ -63,6 +63,7 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 *   `has_permission` 权限检查, 为 `true` 时开启
 *   `at_once` 立刻开始聊天/问答(即不会发送 `聊天/问答将开始`, 而是直接接着指令开始聊天) 默认 `false`
 *   `keep_prefix_check` 保持前缀检查(即一定要附带前缀/`@`才会触发对话)，默认 `false`
+*   `has_economy` 经济系统, 为 `true` 时开启 @see <https://github.com/cssxsh/mirai-economy-core>
 
 `completion.yml` 自定义模型详细配置
 

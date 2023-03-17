@@ -89,4 +89,8 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("has_permission")
     @ValueDescription("权限检查")
     val permission: Boolean by value(false)
+
+    @ValueName("has_economy")
+    @ValueDescription("接入经济系统")
+    val economy: Boolean by value(true)
 }

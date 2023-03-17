@@ -1,6 +1,8 @@
 ## 1.3.2 (23/03/17)
 
 1.  fix: depends on mirai-economy-core
+2.  fix: MiraiOpenAiTokens register
+3.  feat: has_economy config
 
 ## 1.3.1 (23/03/16)
 

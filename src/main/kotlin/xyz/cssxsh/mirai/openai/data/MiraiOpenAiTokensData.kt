@@ -3,12 +3,13 @@ package xyz.cssxsh.mirai.openai.data
 import net.mamoe.mirai.contact.*
 import xyz.cssxsh.mirai.economy.*
 import xyz.cssxsh.mirai.openai.*
+import xyz.cssxsh.mirai.openai.config.*
 
 public object MiraiOpenAiTokensData {
 
     @PublishedApi
     internal val economy: Boolean by lazy {
-        try {
+        MiraiOpenAiConfig.economy && try {
             EconomyService.register(MiraiOpenAiTokens)
             true
         } catch (_: Throwable) {
