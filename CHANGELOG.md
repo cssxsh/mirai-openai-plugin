@@ -1,3 +1,7 @@
+## 1.3.2 (23/03/17)
+
+1.  fix: depends on mirai-economy-core
+
 ## 1.3.1 (23/03/16)
 
 1.  feat: at once
