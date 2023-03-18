@@ -419,11 +419,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             } else {
                 for (member in group.members) {
                     MiraiOpenAiTokensData.plusAssign(member, quantity.toInt())
-                    group.sendMessage(buildMessageChain {
-                        appendLine("你们拥有了 $quantity OpenAiTokens")
-                        append(AtAll)
-                    })
                 }
+                group.sendMessage(buildMessageChain {
+                    appendLine("你们拥有了 $quantity OpenAiTokens")
+                    append(AtAll)
+                })
             }
         }
     }
