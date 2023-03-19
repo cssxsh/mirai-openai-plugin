@@ -10,7 +10,7 @@ internal class OpenAiClientTest {
         override val proxy: String = ""
         override val doh: String = "https://public.dns.iij.jp/dns-query"
         override val ipv6: Boolean = true
-        override val timeout: Long = 30_000L
+        override val timeout: Long = 60_000L
         override val token: String = System.getenv("OPENAI_TOKEN")
 
     }
