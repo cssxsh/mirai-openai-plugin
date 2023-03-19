@@ -288,11 +288,14 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.question)
         lock[event.sender.id] = event
-        val buffer = StringBuffer(prompt)
-        buffer.append('\n')
+        val buffer = StringBuffer()
         val message = if (MiraiOpenAiConfig.atOnce) {
+            buffer.append("Q: ").append(prompt).append('\n')
+            buffer.append("A: ")
             send(event = event, buffer = buffer)
         } else {
+            buffer.append(prompt)
+            buffer.append('\n')
             "聊天将开始"
         }
         launch {
@@ -320,9 +323,12 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 } else {
                     next.contentToString()
                 }
+                if (content == MiraiOpenAiConfig.stop) break
 
                 if (buffer.length > QuestionConfig.maxTokens * 2) {
-                    buffer.delete(prompt.length + 1, buffer.lastIndexOf("Human: "))
+                    val first = buffer.indexOf("Q: ")
+                    val second = buffer.indexOf("Q: ", first)
+                    buffer.delete(first, second)
                 }
 
                 buffer.append("Q: ").append(content).append('\n')
