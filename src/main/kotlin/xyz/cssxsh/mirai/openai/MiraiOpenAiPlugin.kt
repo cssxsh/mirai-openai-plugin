@@ -40,7 +40,18 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         for (config in data) config.reload()
 
         if (MiraiOpenAiConfig.token.isEmpty()) {
-            val token = runBlocking { ConsoleInput.requestInput(hint = "请输入 OpenAI Secret Key") }
+            val token: String = runBlocking {
+                var temp = ""
+                while (isActive) {
+                    temp = ConsoleInput.requestInput(hint = "请输入 OpenAI Secret Key")
+                    if ("*" in temp) {
+                        logger.warning { "你输入 OpenAI Secret Key 有误，请重新输入" }
+                        continue
+                    }
+                    break
+                }
+                temp
+            }
 
             @OptIn(ConsoleExperimentalApi::class)
             @Suppress("UNCHECKED_CAST")
