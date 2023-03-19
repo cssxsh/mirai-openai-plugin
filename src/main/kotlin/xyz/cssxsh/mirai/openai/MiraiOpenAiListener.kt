@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.console.permission.*
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
+import net.mamoe.mirai.console.permission.PermitteeId.Companion.permitteeId
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
@@ -432,6 +433,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     fun SignEvent.economy() {
         if (MiraiOpenAiTokensData.economy.not()) return
         val member = user as? NormalMember ?: return
+        if (MiraiOpenAiConfig.permission && member.permitteeId.hasPermission(chat).not()) return
         MiraiOpenAiTokensData.plusAssign(member, 1024)
         launch {
             member.group.sendMessage(buildMessageChain {
