@@ -27,7 +27,7 @@ internal class OpenAiClientTest {
     }
 
     @Test
-    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun completions(): Unit = runBlocking {
         val model = "text-davinci-003"
         val completion = client.completion.create(model) {
@@ -56,7 +56,7 @@ internal class OpenAiClientTest {
     }
 
     @Test
-    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun chat(): Unit = runBlocking {
         val model = "gpt-3.5-turbo-0301"
         val chat = client.chat.create(model) {

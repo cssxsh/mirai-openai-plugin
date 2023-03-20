@@ -20,7 +20,7 @@ internal class MiraiOpenAiListenerTest {
     private val questioner = group.addMember(7890, "...")
 
     @Test
-    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun completions(): Unit = runBlocking {
         sender.says("> 你好")
     }
@@ -33,7 +33,7 @@ internal class MiraiOpenAiListenerTest {
     }
 
     @Test
-    @EnabledIfEnvironmentVariable(named = "CI", matches = "true")
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun question(): Unit = runBlocking {
         questioner.says("Q&A")
         delay(1_000)
