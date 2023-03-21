@@ -171,6 +171,15 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun chat(event: MessageEvent) {
+        if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
+            launch {
+                event.subject.sendMessage(buildMessageChain {
+                    appendLine("你的 Tokens 不足")
+                    append(At(event.sender))
+                })
+            }
+            return
+        }
         val system = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.chat)
             .replace("""#(\S+)""".toRegex()) { match ->
@@ -186,31 +195,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         lock[event.sender.id] = event
         val buffer = mutableListOf<ChoiceMessage>()
         buffer.add(ChoiceMessage(role = "system", content = system))
-        var init = true
+        val message = if (MiraiOpenAiConfig.atOnce) {
+            send(event = event, buffer = buffer)
+        } else {
+            "聊天将开始"
+        }
+        launch {
+            event.subject.sendMessage(event.message.quote() + message)
+        }
         launch {
             while (isActive) {
-                if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
-                    launch {
-                        event.subject.sendMessage(buildMessageChain {
-                            appendLine("你的 Tokens 不足")
-                            append(At(event.sender))
-                        })
-                    }
-                    break
-                }
-
-                if (init) {
-                    val message = if (MiraiOpenAiConfig.atOnce) {
-                        send(event = event, buffer = buffer)
-                    } else {
-                        "聊天将开始"
-                    }
-                    launch {
-                        event.subject.sendMessage(event.message.quote() + message)
-                    }
-                    init = false
-                }
-
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true) {
                     val text = it.message.contentToString()
                     when {
@@ -279,39 +273,33 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun question(event: MessageEvent) {
+        if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
+            launch {
+                event.subject.sendMessage(buildMessageChain {
+                    appendLine("你的 Tokens 不足")
+                    append(At(event.sender))
+                })
+            }
+            return
+        }
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.question)
         lock[event.sender.id] = event
         val buffer = StringBuffer()
-        var init = true
+        val message = if (MiraiOpenAiConfig.atOnce) {
+            buffer.append("Q: ").append(prompt).append('\n')
+            buffer.append("A: ")
+            send(event = event, buffer = buffer)
+        } else {
+            buffer.append(prompt)
+            buffer.append('\n')
+            "聊天将开始"
+        }
+        launch {
+            event.subject.sendMessage(event.message.quote() + message)
+        }
         launch {
             while (isActive) {
-                if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
-                    launch {
-                        event.subject.sendMessage(buildMessageChain {
-                            appendLine("你的 Tokens 不足")
-                            append(At(event.sender))
-                        })
-                    }
-                    break
-                }
-
-                if (init) {
-                    val message = if (MiraiOpenAiConfig.atOnce) {
-                        buffer.append("Q: ").append(prompt).append('\n')
-                        buffer.append("A: ")
-                        send(event = event, buffer = buffer)
-                    } else {
-                        buffer.append(prompt)
-                        buffer.append('\n')
-                        "聊天将开始"
-                    }
-                    launch {
-                        event.subject.sendMessage(event.message.quote() + message)
-                    }
-                    init = false
-                }
-
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true) {
                     val text = it.message.contentToString()
                     when {
