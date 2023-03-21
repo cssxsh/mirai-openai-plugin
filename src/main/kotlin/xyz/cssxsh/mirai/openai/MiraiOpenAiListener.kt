@@ -76,13 +76,13 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     suspend fun MessageEvent.handle() {
         if (sender.id in lock) return
         val content = message.contentToString()
-        val message: Message = when {
+        when {
             content.startsWith(MiraiOpenAiConfig.completion)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(completion))
             -> if (lock.size >= MiraiOpenAiConfig.limit) {
                 "聊天服务已开启过多，请稍后重试".toPlainText()
             } else {
-                completion(event = this)
+                test(event = this)
             }
             content.startsWith(MiraiOpenAiConfig.image)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(image))
@@ -123,18 +123,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
             else -> return
         }
-
-        subject.sendMessage(message)
     }
 
-    private suspend fun completion(event: MessageEvent): Message {
-        if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
-            return buildMessageChain {
-                appendLine("你的 Tokens 不足")
-                append(At(event.sender))
-            }
-        }
-
+    private suspend fun test(event: MessageEvent) {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.completion)
 
@@ -145,22 +136,19 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             user(event.senderName)
             CompletionConfig.push(this)
         }
-        logger.debug { "${completion.model} - ${completion.usage}" }
-        launch {
-            MiraiOpenAiTokensData.minusAssign(event.sender, completion.usage.totalTokens)
-        }
 
-        return buildMessageChain {
+        event.subject.sendMessage(buildMessageChain {
             add(event.message.quote())
+            append("Usage: ").append(completion.usage.totalTokens.toString())
             for (choice in completion.choices) {
                 append("Choice.").append(choice.index.toString()).append(" FinishReason: ").append(choice.finishReason)
                 if (choice.text.firstOrNull() != '\n') append('\n')
                 append(choice.text).append('\n')
             }
-        }
+        })
     }
 
-    private suspend fun image(event: MessageEvent): Message {
+    private suspend fun image(event: MessageEvent) {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.image)
 
@@ -171,7 +159,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             ImageConfig.push(this)
         }
 
-        return buildMessageChain {
+        event.subject.sendMessage(buildMessageChain {
             add(event.message.quote())
             for (item in result.data) {
                 val file = store(item = item, folder = folder)
@@ -179,10 +167,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
 
                 add(image)
             }
-        }
+        })
     }
 
-    private suspend fun chat(event: MessageEvent): Message {
+    private suspend fun chat(event: MessageEvent) {
         val system = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.chat)
             .replace("""#(\S+)""".toRegex()) { match ->
@@ -198,11 +186,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         lock[event.sender.id] = event
         val buffer = mutableListOf<ChoiceMessage>()
         buffer.add(ChoiceMessage(role = "system", content = system))
-        val message = if (MiraiOpenAiConfig.atOnce) {
-            send(event = event, buffer = buffer)
-        } else {
-            "聊天将开始"
-        }
+        var init = true
         launch {
             while (isActive) {
                 if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
@@ -213,6 +197,18 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                         })
                     }
                     break
+                }
+
+                if (init) {
+                    val message = if (MiraiOpenAiConfig.atOnce) {
+                        send(event = event, buffer = buffer)
+                    } else {
+                        "聊天将开始"
+                    }
+                    launch {
+                        event.subject.sendMessage(event.message.quote() + message)
+                    }
+                    init = false
                 }
 
                 val next = event.nextMessage(ChatConfig.timeout, EventPriority.HIGH, intercept = true) {
@@ -251,8 +247,6 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
         }
-
-        return event.message.quote() + message
     }
 
     private suspend fun send(event: MessageEvent, buffer: MutableList<ChoiceMessage>): String {
@@ -284,20 +278,12 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         return message.content.trim()
     }
 
-    private suspend fun question(event: MessageEvent): Message {
+    private suspend fun question(event: MessageEvent) {
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.question)
         lock[event.sender.id] = event
         val buffer = StringBuffer()
-        val message = if (MiraiOpenAiConfig.atOnce) {
-            buffer.append("Q: ").append(prompt).append('\n')
-            buffer.append("A: ")
-            send(event = event, buffer = buffer)
-        } else {
-            buffer.append(prompt)
-            buffer.append('\n')
-            "聊天将开始"
-        }
+        var init = true
         launch {
             while (isActive) {
                 if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
@@ -308,6 +294,22 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                         })
                     }
                     break
+                }
+
+                if (init) {
+                    val message = if (MiraiOpenAiConfig.atOnce) {
+                        buffer.append("Q: ").append(prompt).append('\n')
+                        buffer.append("A: ")
+                        send(event = event, buffer = buffer)
+                    } else {
+                        buffer.append(prompt)
+                        buffer.append('\n')
+                        "聊天将开始"
+                    }
+                    launch {
+                        event.subject.sendMessage(event.message.quote() + message)
+                    }
+                    init = false
                 }
 
                 val next = event.nextMessage(QuestionConfig.timeout, EventPriority.HIGH, intercept = true) {
@@ -354,8 +356,6 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
         }
-
-        return event.message.quote() + message
     }
 
     private suspend fun send(event: MessageEvent, buffer: StringBuffer): String {
