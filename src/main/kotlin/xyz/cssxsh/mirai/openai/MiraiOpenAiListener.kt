@@ -428,10 +428,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         if (MiraiOpenAiTokensData.economy.not()) return
         val member = user as? NormalMember ?: return
         if (MiraiOpenAiConfig.permission && member.permitteeId.hasPermission(chat).not()) return
-        MiraiOpenAiTokensData.plusAssign(member, 1024)
+        MiraiOpenAiTokensData.plusAssign(member, EconomyConfig.sign)
         launch {
             member.group.sendMessage(buildMessageChain {
-                appendLine("你获得了 1024 OpenAiTokens")
+                appendLine("你获得了 ${EconomyConfig.sign} OpenAiTokens")
                 append(At(user))
             })
         }
