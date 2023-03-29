@@ -191,7 +191,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     match.value
                 }
             }
-            .ifEmpty { MiraiOpenAiPrompts.prompt(id = event.sender.id) }
+            .ifEmpty { MiraiOpenAiPrompts.prompt(event.sender.id, event.subject.id) }
         lock[event.sender.id] = event
         val buffer = mutableListOf<ChoiceMessage>()
         buffer.add(ChoiceMessage(role = "system", content = system))
@@ -445,8 +445,12 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val path = content
             .removePrefix(MiraiOpenAiConfig.bind)
             .trimIndent()
+        val target = when {
+            (sender as? NormalMember)?.isOperator() ?: false -> (sender as NormalMember).group
+            else -> sender
+        }
         val prompt = try {
-            MiraiOpenAiPrompts.bind(id = sender.id, path = path)
+            MiraiOpenAiPrompts.bind(id = target.id, path = path)
         } catch (_: FileNotFoundException) {
             launch {
                 subject.sendMessage("文件不存在")
@@ -455,7 +459,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         }
         launch {
             subject.sendMessage(buildMessageChain {
-                appendLine("将为你绑定 $path")
+                if (target is Group) {
+                    appendLine("将为群绑定 $path")
+                } else {
+                    appendLine("将为你绑定 $path")
+                }
                 appendLine()
                 appendLine(prompt)
             })

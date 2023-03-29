@@ -19,8 +19,9 @@ public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
 
     private val cache: MutableMap<String, String> = WeakHashMap()
 
-    public fun prompt(id: Long): String {
-        val path = bind[id] ?: return default
+    public fun prompt(vararg ids: Long): String {
+        val path = ids.toList()
+            .firstNotNullOfOrNull { bind[it] } ?: return default
 
         return prompt(path = path)
     }
@@ -37,6 +38,10 @@ public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
         val prompt = prompt(path = path)
         bind[id] = path
         return prompt
+    }
+
+    public fun unbind(id: Long): String? {
+        return bind.remove(id)
     }
 
     @OptIn(ConsoleExperimentalApi::class)
