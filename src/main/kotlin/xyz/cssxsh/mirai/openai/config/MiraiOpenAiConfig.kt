@@ -8,6 +8,7 @@ import xyz.cssxsh.openai.*
 internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClientConfig {
 
     @ValueName("proxy")
+    @ValueDescription("配置时请注意单引号")
     override val proxy: String by value("")
 
     @ValueName("doh")
@@ -35,7 +36,7 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     val bye: Boolean by value(false)
 
     @ValueName("completion_prefix")
-    @ValueDescription("自定义模型触发前缀")
+    @ValueDescription("自定义(用于测试)模型触发前缀")
     val completion: String by value("> ")
 
     @ValueName("image_prefix")

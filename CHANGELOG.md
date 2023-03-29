@@ -1,3 +1,10 @@
+## 1.4.0 (23/03/29)
+
+1.  fix: economy and once
+2.  feat: sign_plus_assign, close #22
+3.  feat: start info config
+4.  feat: group bind, close #19
+
 ## 1.3.3 (23/03/18)
 
 1.  fix: economy all

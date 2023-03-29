@@ -5,5 +5,6 @@ import net.mamoe.mirai.console.data.*
 public object EconomyConfig : ReadOnlyPluginConfig("economy") {
 
     @ValueName("sign_plus_assign")
+    @ValueDescription("签到增加的tokens数量")
     public val sign: Int by value(1024)
 }

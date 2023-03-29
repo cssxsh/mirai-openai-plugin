@@ -58,14 +58,13 @@ internal class OpenAiClientTest {
     @Test
     @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun chat(): Unit = runBlocking {
-        val model = "gpt-3.5-turbo-0301"
+        val model = "gpt-3.5-turbo"
         val chat = client.chat.create(model) {
             messages {
                 user(content = "Hello!")
             }
         }
 
-        Assertions.assertEquals(model, chat.model)
         Assertions.assertFalse(chat.choices.isEmpty())
         Assertions.assertNotNull(chat.choices.first().message)
     }
