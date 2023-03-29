@@ -40,3 +40,12 @@ jobs:
         run: ./gradlew test --tests "xyz.cssxsh.mirai.openai.MiraiOpenAiListenerTest" --scan --info
         env:
           OPENAI_TOKEN: ${{ secrets.OPENAI_TOKEN }}
+
+      - name: BuildPlugin
+        run: ./gradlew buildPlugin
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build/mirai/*
