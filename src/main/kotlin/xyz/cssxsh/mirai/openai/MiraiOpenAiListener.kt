@@ -112,7 +112,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     config.reload()
                 }
                 client.clearToken()
-                "OPENAI 配置已重载".toPlainText()
+                subject.sendMessage( "OPENAI 配置已重载")
             }
             message.findIsInstance<At>()?.target == bot.id && MiraiOpenAiConfig.chatByAt
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(chat))
