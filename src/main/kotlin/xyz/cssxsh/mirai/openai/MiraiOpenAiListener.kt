@@ -198,7 +198,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val message = if (MiraiOpenAiConfig.atOnce) {
             send(event = event, buffer = buffer)
         } else {
-            "聊天将开始"
+            MiraiOpenAiConfig.chatStart.ifEmpty { "聊天将开始" }
         }
         launch {
             event.subject.sendMessage(event.message.quote() + message)
@@ -293,7 +293,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         } else {
             buffer.append(prompt)
             buffer.append('\n')
-            "聊天将开始"
+            MiraiOpenAiConfig.questionStart.ifEmpty { "问答将开始" }
         }
         launch {
             event.subject.sendMessage(event.message.quote() + message)
