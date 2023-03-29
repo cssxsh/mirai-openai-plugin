@@ -20,10 +20,12 @@ public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
     private val cache: MutableMap<String, String> = WeakHashMap()
 
     public fun prompt(vararg ids: Long): String {
-        val path = ids.toList()
-            .firstNotNullOfOrNull { bind[it] } ?: return default
-
-        return prompt(path = path)
+        for (id in ids) {
+            val path = bind[id] ?: continue
+            return prompt(path = path)
+        }
+        logger.info("没有找到对应语境")
+        return default
     }
 
     public fun prompt(path: String): String {

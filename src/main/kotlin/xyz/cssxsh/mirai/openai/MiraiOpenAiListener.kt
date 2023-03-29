@@ -180,7 +180,8 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
             return
         }
-        val system = event.message.contentToString()
+        val system = event.message
+            .findIsInstance<PlainText>()?.content.orEmpty()
             .removePrefix(MiraiOpenAiConfig.chat)
             .replace("""#(\S+)""".toRegex()) { match ->
                 val (path) = match.destructured
