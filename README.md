@@ -20,7 +20,8 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 停止聊天或问答默认使用 `stop` 触发  
 重载配置默认使用 `openai-reload` (reload_prefix) 触发，使用后将重新加载配置，无需重启 `Mirai Console`
 
-`/v1/chat/completions` 消耗 `tokens` 比 `/v1/completions` 小，但是聊天特化，请自行注意两者的区别
+`/v1/chat/completions` 消耗 `tokens` 比 `/v1/completions` 小，但是聊天特化，请自行注意两者的区别  
+如果需要使用 `GPT4`，请参照 [Model endpoint compatibility](https://platform.openai.com/docs/models/model-endpoint-compatibility) 替换模型
 
 默认情况下 `权限检查` 是关闭的, 需要在基本配置中配置开启 (开启后会在日志中给出权限ID)
 

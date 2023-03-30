@@ -4,6 +4,7 @@
 2.  feat: sign_plus_assign, close #22
 3.  feat: start info config
 4.  feat: group bind, close #19
+5.  feat: check cloudflare
 
 ## 1.3.3 (23/03/18)
 
