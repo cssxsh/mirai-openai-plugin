@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.openai
 
+import io.ktor.client.call.*
 import io.ktor.client.network.sockets.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -62,6 +63,15 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                                 info == null -> Unit
                                 info.endsWith(", failed on all servers.") -> {
                                     event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片上传失败 请重试")
+                                }
+                            }
+                        }
+                        is NoTransformationFoundException -> {
+                            val info = cause.message
+                            when {
+                                info == null -> Unit
+                                "cloudflare" in info -> {
+                                    event.subject.sendMessage(event.message.quote() + "OpenAI API 访问失败 请检查代理设置")
                                 }
                             }
                         }
