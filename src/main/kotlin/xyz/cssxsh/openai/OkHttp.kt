@@ -20,6 +20,7 @@ internal fun OkHttpClient.Builder.apply(config: OpenAiClientConfig) {
             .build()
 
         override fun lookup(hostname: String): List<InetAddress> {
+            if (hostname == "api.openai.com" && config.proxy.isEmpty()) return lookup("52.152.96.252")
             return try {
                 doh.lookup(hostname)
             } catch (_: UnknownHostException) {

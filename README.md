@@ -11,7 +11,8 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 注意，不是 `Cookie Token`, 是 `api-key`  
 ~~另外，可以直连，不需要代理，只是注册账号的时候需要代理~~   
 `api.openai.com` 已列入黑名单，你需要配置代理  
-如果没有配置，本插件会尝试做一些特殊处理，一般情况下也能正常使用
+如果没有配置，本插件会尝试做一些特殊处理，~~一般情况下也能正常使用~~  
+`api.openai.com` IP地址变更，套了一层 `cloudflare`, 特殊处理失效, 表现为 `403`-`text/html` 响应 
 
 开启聊天默认使用 `chat` (chat_prefix) 触发, 基于 `/v1/chat/completions` 默认模型 `gpt-3.5-turbo`  
 开启问答默认使用 `Q&A` (question_prefix) 触发, 基于 `/v1/completions` 默认模型 `text-davinci-003`  
