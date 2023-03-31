@@ -1,5 +1,9 @@
 ## 1.4.1 (23/03/30)
 
+1.  fix: prompt `~`
+
+## 1.4.1 (23/03/30)
+
 1.  fix: config-reload
 2.  fix: prompt load
 3.  feat: prompt `~`, close #25
