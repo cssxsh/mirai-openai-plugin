@@ -1,10 +1,17 @@
+## 1.4.1 (23/03/30)
+
+1.  fix: config-reload
+2.  fix: prompt load
+3.  feat: prompt `~`, close #25
+4.  fix: ip
+5.  feat: check cloudflare
+
 ## 1.4.0 (23/03/29)
 
 1.  fix: economy and once
 2.  feat: sign_plus_assign, close #22
 3.  feat: start info config
 4.  feat: group bind, close #19
-5.  feat: check cloudflare
 
 ## 1.3.3 (23/03/18)
 
