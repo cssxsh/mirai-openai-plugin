@@ -3,8 +3,8 @@ package xyz.cssxsh.mirai.openai.data
 import net.mamoe.mirai.console.data.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.util.*
-import net.mamoe.mirai.utils.MiraiLogger
-import java.util.WeakHashMap
+import net.mamoe.mirai.utils.*
+import java.util.*
 
 public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
 
@@ -24,7 +24,7 @@ public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
             val path = bind[id] ?: continue
             return prompt(path = path)
         }
-        logger.info("没有找到对应语境")
+        logger.debug("没有找到对应 ${ids.contentToString()} 语境")
         return default
     }
 

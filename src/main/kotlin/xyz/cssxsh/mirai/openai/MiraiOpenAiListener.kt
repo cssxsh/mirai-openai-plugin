@@ -202,7 +202,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                     match.value
                 }
             }
-            .replace("""~|.|。""".toRegex()) { _ -> MiraiOpenAiPrompts.prompt(event.sender.id, event.subject.id) }
+            .replace("""[~.]\s+""".toRegex()) { _ -> MiraiOpenAiPrompts.prompt(event.sender.id, event.subject.id) }
             .ifBlank { MiraiOpenAiPrompts.prompt(event.sender.id, event.subject.id) }
         lock[event.sender.id] = event
         val buffer = mutableListOf<ChoiceMessage>()
