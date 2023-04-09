@@ -39,12 +39,12 @@ public object MiraiOpenAiPlugin : KotlinPlugin(
         for (config in config) config.reload()
         for (config in data) config.reload()
 
-        if (MiraiOpenAiConfig.token.isEmpty()) {
+        if ("*" in MiraiOpenAiConfig.token.ifBlank { "***" }) {
             val token: String = runBlocking {
                 var temp = ""
                 while (isActive) {
                     temp = ConsoleInput.requestInput(hint = "请输入 OpenAI Secret Key")
-                    if ("*" in temp) {
+                    if ("*" in temp.ifBlank { "***" }) {
                         logger.warning { "你输入 OpenAI Secret Key 有误，请重新输入" }
                         continue
                     }
