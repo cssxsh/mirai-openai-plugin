@@ -20,7 +20,9 @@ internal fun OkHttpClient.Builder.apply(config: OpenAiClientConfig) {
             .build()
 
         override fun lookup(hostname: String): List<InetAddress> {
-            if (hostname == "api.openai.com" && config.proxy.isEmpty()) return lookup("msly.api.openai.com")
+            if (hostname == "api.openai.com" && System.getProperty("xyz.cssxsh.openai.cname", "true").toBoolean()) {
+                return lookup("msly.api.openai.com")
+            }
             return try {
                 doh.lookup(hostname)
             } catch (_: UnknownHostException) {

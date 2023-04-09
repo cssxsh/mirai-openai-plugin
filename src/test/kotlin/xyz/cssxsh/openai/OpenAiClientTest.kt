@@ -6,13 +6,15 @@ import org.junit.jupiter.api.condition.*
 import xyz.cssxsh.openai.image.*
 
 internal class OpenAiClientTest {
+    init {
+        System.setProperty("xyz.cssxsh.openai.cname", "false")
+    }
     private val config = object : OpenAiClientConfig {
         override val proxy: String = ""
         override val doh: String = "https://public.dns.iij.jp/dns-query"
         override val ipv6: Boolean = true
         override val timeout: Long = 60_000L
         override val token: String = System.getenv("OPENAI_TOKEN")
-
     }
     private val client = OpenAiClient(config = config)
 

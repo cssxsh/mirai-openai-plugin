@@ -11,6 +11,7 @@ internal class MiraiOpenAiListenerTest {
     init {
         System.setProperty("org.slf4j.simpleLogger.log.xyz", "TRACE")
         System.setProperty("org.slf4j.simpleLogger.log.net.mamoe", "TRACE")
+        System.setProperty("xyz.cssxsh.openai.cname", "false")
         MiraiOpenAiListener.registerTo(GlobalEventChannel)
     }
     private val bot = MockBotFactory.newMockBotBuilder().create()
