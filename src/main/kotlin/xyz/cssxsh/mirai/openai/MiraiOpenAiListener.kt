@@ -281,7 +281,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> Unit
         }
 
-        return message.content.trim()
+        return message.content.trim().ifEmpty { "..." }
     }
 
     private suspend fun question(event: MessageEvent) {
@@ -378,7 +378,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> Unit
         }
 
-        return reply.text.trim()
+        return reply.text.trim().ifEmpty { "..." }
     }
 
     private suspend fun store(item: ImageInfo.Data, folder: File): File {
