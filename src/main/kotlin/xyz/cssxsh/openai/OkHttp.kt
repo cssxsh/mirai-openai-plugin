@@ -33,8 +33,10 @@ internal fun OkHttpClient.Builder.apply(config: OpenAiClientConfig) {
         }
     })
     proxy(config.proxy.ifEmpty {
-        sslSocketFactory(FakeSSLSocketFactory, FakeX509TrustManager)
-        hostnameVerifier(FakeHostnameVerifier)
+        if (System.getProperty("xyz.cssxsh.openai.cname", "true").toBoolean()) {
+            sslSocketFactory(FakeSSLSocketFactory, FakeX509TrustManager)
+            hostnameVerifier(FakeHostnameVerifier)
+        }
         null
     }?.let { urlString ->
         val url = Url(urlString)
