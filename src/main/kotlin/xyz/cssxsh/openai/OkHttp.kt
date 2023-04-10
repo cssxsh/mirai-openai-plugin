@@ -36,6 +36,14 @@ internal fun OkHttpClient.Builder.apply(config: OpenAiClientConfig) {
         if (System.getProperty("xyz.cssxsh.openai.cname", "true").toBoolean()) {
             sslSocketFactory(FakeSSLSocketFactory, FakeX509TrustManager)
             hostnameVerifier(FakeHostnameVerifier)
+        } else {
+            val system = System.getProperty("java.net.useSystemProxies", "false")
+            try {
+                System.setProperty("java.net.useSystemProxies", "true")
+                proxySelector(ProxySelector.getDefault())
+            } finally {
+                System.setProperty("java.net.useSystemProxies", system)
+            }
         }
         null
     }?.let { urlString ->
