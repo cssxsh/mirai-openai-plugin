@@ -193,10 +193,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val system = event.message
             .findIsInstance<PlainText>()?.content.orEmpty()
             .removePrefix(MiraiOpenAiConfig.chat)
-            .replace("""#(\S+|\(.+\))""".toRegex()) { match ->
+            .replace("""#(<.+?>|\S+)""".toRegex()) { match ->
                 val (path) = match.destructured
                 try {
-                    MiraiOpenAiPrompts.prompt(path = path.removeSurrounding("(", ")"))
+                    MiraiOpenAiPrompts.prompt(path = path.removeSurrounding("<", ">"))
                 } catch (exception: FileNotFoundException) {
                     logger.warning({ "文件不存在" }, exception)
                     match.value
@@ -281,7 +281,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> Unit
         }
 
-        return message.content.trim().ifEmpty { "..." }
+        return message.content.trimStart().ifEmpty { "..." }
     }
 
     private suspend fun question(event: MessageEvent) {
@@ -378,7 +378,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> Unit
         }
 
-        return reply.text.trim().ifEmpty { "..." }
+        return reply.text.trimStart().ifEmpty { "..." }
     }
 
     private suspend fun store(item: ImageInfo.Data, folder: File): File {
@@ -456,7 +456,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         if (content.startsWith(MiraiOpenAiConfig.bind).not()) return
         val path = content
             .removePrefix(MiraiOpenAiConfig.bind)
-            .trimIndent()
+            .trim()
         val target = when {
             (sender as? NormalMember)?.isOperator() ?: false -> (sender as NormalMember).group
             else -> sender
