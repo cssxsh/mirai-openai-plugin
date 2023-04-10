@@ -193,10 +193,10 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         val system = event.message
             .findIsInstance<PlainText>()?.content.orEmpty()
             .removePrefix(MiraiOpenAiConfig.chat)
-            .replace("""#(\S+)""".toRegex()) { match ->
+            .replace("""#(\S+|\(.+\))""".toRegex()) { match ->
                 val (path) = match.destructured
                 try {
-                    MiraiOpenAiPrompts.prompt(path = path)
+                    MiraiOpenAiPrompts.prompt(path = path.removeSurrounding("(", ")"))
                 } catch (exception: FileNotFoundException) {
                     logger.warning({ "文件不存在" }, exception)
                     match.value
