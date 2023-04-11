@@ -1,4 +1,13 @@
-## 1.4.1 (23/03/30)
+## 1.5.0 (23/04/11)
+
+1.  fix: Empty to ...
+2.  fix: reset '***'
+3.  feat: cname by properties, example `-Dxyz.cssxsh.openai.cname=false`
+4.  feat: community-prompts from <https://chathub.gg/api/community-prompts> 
+
+将会移动 `prompt` 到新路径 `data/xyz.cssxsh.mirai.plugin.mirai-openai-plugin/prompts`
+
+## 1.4.2 (23/03/31)
 
 1.  fix: prompt `~`
 

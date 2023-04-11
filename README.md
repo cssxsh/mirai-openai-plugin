@@ -36,7 +36,8 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 **Since 1.3.0** 添加经济系统对接 和 预置语境  
 **Since 1.3.1** 添加一些可能会带来BUG的配置 `立刻开始聊天`, `保持前缀检查`  
 **Since 1.4.0** 修改经济检查逻辑，仅在聊天开始前检查是否余额  
-**Since 1.4.1** 添加绑定预设的引用 `~`
+**Since 1.4.1** 添加绑定预设的引用 `~`  
+**Since 1.5.0** 添加控制 `cname` 功能的配置，用法：在 `Java` 启动参数中添加 `-Dxyz.cssxsh.openai.cname=false`
 
 ## 效果
 
@@ -131,8 +132,9 @@ OpenAI 目前对注册有一定要求，请先阅读 [注册](#注册), 然后�
 
 有些人也将其形容为 `人格`, 实际上这个功能是告诉机器人你需要扮演什么角色或者提供什么功能  
 
-配置方法, 在插件数据目录 `data/xyz.cssxsh.mirai.plugin.mirai-openai-plugin` 下新建 `XXX.txt`  
-然后填入你需要预置的内容
+配置方法, 在插件数据目录 `data/xyz.cssxsh.mirai.plugin.mirai-openai-plugin/prompts` 下新建 `XXX.txt`  
+然后填入你需要预置的内容  
+**Since 1.5** 将会从 <https://chathub.gg/api/community-prompts> 加载第三方语境, 同时以 `#<充当 Linux 终端>` 的格式兼容空格
 
 使用方法，在 `chat` 后面附加 `#XXX`, 例如 `chat #猫娘`  
 或者使用 `bind` 为当前用户绑定一个默认 `prompt`, 例如 `bind 猫娘`  
