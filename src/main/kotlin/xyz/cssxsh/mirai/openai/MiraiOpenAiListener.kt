@@ -55,14 +55,17 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                             event.subject.sendMessage(event.message.quote() + "OpenAI API 超时 请重试")
                         }
                         is OverFileSizeMaxException -> {
-                            event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片过大 请重试")
+                            event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片过大, 请重试")
+                        }
+                        is OpenAiException -> {
+                            event.subject.sendMessage(event.message.quote() + "OpenAI API 异常, ${cause.message}")
                         }
                         is IllegalStateException -> {
                             val info = cause.message
                             when {
                                 info == null -> Unit
                                 info.endsWith(", failed on all servers.") -> {
-                                    event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片上传失败 请重试")
+                                    event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片上传失败, 请重试")
                                 }
                             }
                         }
@@ -71,7 +74,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                             when {
                                 info == null -> Unit
                                 "cloudflare" in info -> {
-                                    event.subject.sendMessage(event.message.quote() + "OpenAI API 访问失败 请检查代理设置")
+                                    event.subject.sendMessage(event.message.quote() + "OpenAI API 访问失败, 请检查代理设置")
                                 }
                             }
                         }
