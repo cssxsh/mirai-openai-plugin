@@ -58,7 +58,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                             event.subject.sendMessage(event.message.quote() + "OpenAI API 生成图片过大, 请重试")
                         }
                         is OpenAiException -> {
-                            event.subject.sendMessage(event.message.quote() + "OpenAI API 异常, ${cause.message}")
+                            if (MiraiOpenAiConfig.exception) {
+                                event.subject.sendMessage(event.message.quote() + "OpenAI API 异常, ${cause.message}")
+                            }
                         }
                         is IllegalStateException -> {
                             val info = cause.message

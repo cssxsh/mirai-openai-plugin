@@ -102,4 +102,8 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueName("has_economy")
     @ValueDescription("接入经济系统")
     val economy: Boolean by value(true)
+
+    @ValueName("show_exception")
+    @ValueDescription("出现API异常时回复异常信息")
+    val exception: Boolean by value(true)
 }
