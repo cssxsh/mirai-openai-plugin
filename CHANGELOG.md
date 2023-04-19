@@ -1,3 +1,8 @@
+## 1.5.1 (23/04/19)
+
+1.  feat: handle OpenAiException
+2.  feat: config show_exception
+
 ## 1.5.0 (23/04/11)
 
 1.  fix: Empty to ...

@@ -154,7 +154,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
 
         event.subject.sendMessage(buildMessageChain {
             add(event.message.quote())
-            append("Usage: ").append(completion.usage.totalTokens.toString())
+            append("Usage: ").append(completion.usage.totalTokens.toString()).append('\n')
             for (choice in completion.choices) {
                 append("Choice.").append(choice.index.toString()).append(" FinishReason: ").append(choice.finishReason)
                 if (choice.text.firstOrNull() != '\n') append('\n')
