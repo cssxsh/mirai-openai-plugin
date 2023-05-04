@@ -467,7 +467,11 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             else -> sender
         }
         val prompt = try {
-            MiraiOpenAiPrompts.bind(id = target.id, path = path)
+            if (path == "default") {
+                MiraiOpenAiPrompts.unbind(id = target.id)
+            } else {
+                MiraiOpenAiPrompts.bind(id = target.id, path = path)
+            }
         } catch (_: FileNotFoundException) {
             launch {
                 subject.sendMessage("文件不存在")
