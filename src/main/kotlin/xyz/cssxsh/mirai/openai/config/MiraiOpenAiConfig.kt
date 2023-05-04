@@ -71,6 +71,14 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("经济设置触发前缀")
     val tokens: String by value("tokens")
 
+    @ValueName("prompts_prefix")
+    @ValueDescription("展示 prompts 触发前缀")
+    val prompts: String by value("prompts")
+
+    @ValueName("prompts_page")
+    @ValueDescription("展示 prompts 单页数量")
+    val page: Int by value(10)
+
     @ValueName("bind_set_prefix")
     @ValueDescription("绑定设置触发前缀")
     val bind: String by value("bind")

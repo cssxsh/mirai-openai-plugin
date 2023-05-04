@@ -490,4 +490,24 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             })
         }
     }
+
+    @EventHandler
+    fun MessageEvent.prompts() {
+        if (MiraiOpenAiConfig.permission && toCommandSender().hasPermission(chat).not()) return
+        val content = message.contentToString()
+        if (content.startsWith(MiraiOpenAiConfig.prompts).not()) return
+        val index = """\d+""".toRegex().find(content)?.value?.toInt() ?: 1
+        val page = MiraiOpenAiPrompts.keys().chunked(MiraiOpenAiConfig.page)
+            .getOrNull(index - 1).orEmpty()
+
+        launch {
+            subject.sendMessage(buildMessageChain {
+                appendLine("第 $page 页")
+                appendLine()
+                page.forEach { name ->
+                    appendLine(name)
+                }
+            })
+        }
+    }
 }

@@ -57,6 +57,11 @@ public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
         return bind.remove(id)
     }
 
+    public fun keys(): List<String> {
+        return folder.list { _, name -> name.endsWith(".txt") }
+            ?.asList().orEmpty()
+    }
+
     public suspend fun community() {
         val http = HttpClient(OkHttp) {
             install(ContentNegotiation) {
