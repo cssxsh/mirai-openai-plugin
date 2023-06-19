@@ -1,11 +1,14 @@
 package xyz.cssxsh.openai.chat
 
 import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import xyz.cssxsh.openai.*
 
 /**
  * @param model [create-model](https://platform.openai.com/docs/api-reference/chat/create#chat/create-model)
  * @param messages [create-messages](https://platform.openai.com/docs/api-reference/chat/create#chat/create-messages)
+ * @param functions [create-functions](https://platform.openai.com/docs/api-reference/chat/create#chat/create-functions)
+ * @param call [create-function_call](https://platform.openai.com/docs/api-reference/chat/create#chat/create-function_call)
  * @param temperature [create-temperature](https://platform.openai.com/docs/api-reference/chat/create#chat/create-temperature)
  * @param topP [create-top_p](https://platform.openai.com/docs/api-reference/chat/create#chat/create-top_p)
  * @param number [create-n](https://platform.openai.com/docs/api-reference/chat/create#chat/create-n)
@@ -23,6 +26,10 @@ public data class ChatRequest(
     val model: String,
     @SerialName("messages")
     val messages: List<ChoiceMessage>,
+    @SerialName("functions")
+    val functions: List<ChoiceFunction> = emptyList(),
+    @SerialName("function_call")
+    val call: JsonElement,
     @SerialName("temperature")
     val temperature: Double = 1.0,
     @SerialName("top_p")
@@ -81,6 +88,37 @@ public data class ChatRequest(
         @OpenAiDsl
         public fun MutableList<ChoiceMessage>.assistant(content: String): Boolean {
             return add(ChoiceMessage(role = "system", content = content))
+        }
+
+        @OpenAiDsl
+        public var functions: List<ChoiceFunction> = emptyList()
+
+        @OpenAiDsl
+        public fun functions(values: List<ChoiceFunction>): Builder = apply {
+            functions = values
+        }
+
+        @OpenAiDsl
+        public fun functions(vararg values: ChoiceFunction): Builder = apply {
+            functions = values.asList()
+        }
+
+        @OpenAiDsl
+        public fun functions(block: MutableList<ChoiceFunction>.() -> Unit): Builder = apply {
+            functions = buildList(block)
+        }
+
+        @OpenAiDsl
+        public var call: JsonElement? = null
+
+        @OpenAiDsl
+        public fun call(name: String): Builder = apply {
+            call = JsonPrimitive(name)
+        }
+
+        @OpenAiDsl
+        public fun call(block: JsonObjectBuilder.() -> Unit): Builder = apply {
+            call = buildJsonObject(block)
         }
 
         @OpenAiDsl
@@ -186,6 +224,8 @@ public data class ChatRequest(
             return ChatRequest(
                 model = model,
                 messages = messages,
+                functions = functions,
+                call = call ?: if (functions.isEmpty()) JsonPrimitive("none") else JsonPrimitive("auto"),
                 temperature = temperature,
                 topP = topP,
                 number = number,
