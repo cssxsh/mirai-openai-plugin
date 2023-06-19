@@ -281,12 +281,18 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             if (buffer.size > 2) buffer.removeAt(1)
         }
 
-        when (reply.finishReason) {
-            "length" -> logger.warning { "max_tokens not enough for ${event.sender} " }
-            else -> Unit
+        return when (reply.finishReason) {
+            "length" -> {
+                logger.warning { "max_tokens not enough for ${event.sender} " }
+                message.content.orEmpty().trimStart().ifEmpty { "..." }
+            }
+            "function_call" -> {
+                TODO("function_call")
+            }
+            else -> {
+                message.content.orEmpty().trimStart().ifEmpty { "..." }
+            }
         }
-
-        return message.content.trimStart().ifEmpty { "..." }
     }
 
     private suspend fun question(event: MessageEvent) {

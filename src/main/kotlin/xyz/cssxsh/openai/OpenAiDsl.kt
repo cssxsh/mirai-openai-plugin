@@ -1,5 +1,6 @@
 package xyz.cssxsh.openai
 
+import kotlinx.serialization.json.JsonObject
 import xyz.cssxsh.openai.completion.*
 import xyz.cssxsh.openai.edit.EditRequest
 import xyz.cssxsh.openai.embedding.EmbeddingRequest
@@ -42,4 +43,11 @@ public inline fun buildFineTuneRequest(
     block: FineTuneRequest.Builder.() -> Unit
 ): FineTuneRequest {
     return FineTuneRequest.Builder(trainingFile = trainingFile).apply(block).build()
+}
+
+public inline fun buildChoiceFunctionParameters(
+    vararg required: String,
+    block: ChoiceFunction.Parameters.() -> Unit
+): JsonObject {
+    return ChoiceFunction.Parameters(required = required).apply(block).build()
 }

@@ -109,6 +109,21 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
+        public fun MutableList<ChoiceFunction>.define(
+            name: String,
+            description: String = "",
+            block: ChoiceFunction.Parameters.() -> Unit = {}
+        ): Boolean {
+            return add(
+                ChoiceFunction(
+                    name = name,
+                    description = description.ifEmpty { null },
+                    parameters = ChoiceFunction.Parameters().apply(block).build().ifEmpty { null }
+                )
+            )
+        }
+
+        @OpenAiDsl
         public var call: JsonObject? = null
 
         @OpenAiDsl
@@ -168,12 +183,13 @@ public data class ChatRequest(
 
 
         @OpenAiDsl
-        public var maxTokens: Int = 16
+        public var maxTokens: Int = 256
 
         @OpenAiDsl
         public fun maxTokens(value: Int): Builder = apply {
             maxTokens = value
         }
+
         @OpenAiDsl
         public var presencePenalty: Double = 0.0
 

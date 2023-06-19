@@ -11,9 +11,9 @@ public data class ChoiceMessage(
     @SerialName("role")
     val role: String,
     @SerialName("content")
-    val content: String = "",
+    val content: String? = null,
     @SerialName("name")
     val name: String? = null,
     @SerialName("function_call")
-    val call: JsonObject? = null
+    val call: Map<String, String>? = null
 )

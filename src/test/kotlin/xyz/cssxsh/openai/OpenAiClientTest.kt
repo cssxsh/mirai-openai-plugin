@@ -1,6 +1,7 @@
 package xyz.cssxsh.openai
 
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.condition.*
 import xyz.cssxsh.openai.image.*
@@ -69,5 +70,77 @@ internal class OpenAiClientTest {
 
         Assertions.assertFalse(chat.choices.isEmpty())
         Assertions.assertNotNull(chat.choices.first().message)
+    }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
+    fun call(): Unit = runBlocking {
+        val model = "gpt-3.5-turbo-0613"
+        var cache: List<ChoiceMessage> = emptyList()
+        var func: List<ChoiceFunction> = emptyList()
+        val step1 = client.chat.create(model) {
+            messages {
+                system("Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.")
+                user("What's the weather like today")
+            }
+            functions {
+                define("get_current_weather", "Get the current weather") {
+                    property("location") {
+                        put("type", "string")
+                        put("description", "The city and state, e.g. San Francisco, CA")
+                    }
+                    property("format") {
+                        put("type", "string")
+                        putJsonArray("enum") {
+                            add("celsius")
+                            add("fahrenheit")
+                        }
+                        put("description", "The temperature unit to use. Infer this from the users location.")
+                    }
+                    required("location", "format")
+                }
+                define("get_n_day_weather_forecast", "Get an N-day weather forecast") {
+                    property("location") {
+                        put("type", "string")
+                        put("description", "The city and state, e.g. San Francisco, CA")
+                    }
+                    property("format") {
+                        put("type", "string")
+                        putJsonArray("enum") {
+                            add("celsius")
+                            add("fahrenheit")
+                        }
+                        put("description", "The temperature unit to use. Infer this from the users location.")
+                    }
+                    property("num_days") {
+                        put("type", "integer")
+                        put("description", "The number of days to forecast")
+                    }
+                    required("location", "format", "num_days")
+                }
+            }
+            maxTokens = 2048
+
+            cache = messages
+            func = functions
+        }
+
+        Assertions.assertFalse(step1.choices.isEmpty())
+
+        val step2 = client.chat.create(model) {
+            messages {
+                addAll(cache)
+                add(step1.choices.first().message!!)
+
+                user("I'm in Glasgow, Scotland.")
+            }
+            functions = func
+            maxTokens = 2048
+        }
+
+        Assertions.assertFalse(step2.choices.isEmpty())
+        val assistant = step2.choices.first()
+        Assertions.assertEquals("function_call", assistant.finishReason)
+        Assertions.assertFalse(assistant.message!!.call!!.isEmpty())
     }
 }
