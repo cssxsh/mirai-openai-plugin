@@ -27,9 +27,9 @@ public data class ChatRequest(
     @SerialName("messages")
     val messages: List<ChoiceMessage>,
     @SerialName("functions")
-    val functions: List<ChoiceFunction> = emptyList(),
+    val functions: List<ChoiceFunction>? = null,
     @SerialName("function_call")
-    val call: JsonElement,
+    val call: JsonElement = JsonNull,
     @SerialName("temperature")
     val temperature: Double = 1.0,
     @SerialName("top_p")
@@ -109,11 +109,11 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
-        public var call: JsonElement? = null
+        public var call: JsonObject? = null
 
         @OpenAiDsl
-        public fun call(name: String): Builder = apply {
-            call = JsonPrimitive(name)
+        public fun call(name: String): Builder = call {
+            put("name", name)
         }
 
         @OpenAiDsl
@@ -154,7 +154,7 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
-        public var stop: List<String>? = null
+        public var stop: List<String> = emptyList()
 
         @OpenAiDsl
         public fun stop(values: List<String>): Builder = apply {
@@ -199,7 +199,7 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
-        public var logitBias: Map<String, Int>? = null
+        public var logitBias: Map<String, Int> = emptyMap()
 
         @OpenAiDsl
         public fun logitBias(value: Map<String, Int>): Builder = apply {
@@ -224,17 +224,17 @@ public data class ChatRequest(
             return ChatRequest(
                 model = model,
                 messages = messages,
-                functions = functions,
-                call = call ?: if (functions.isEmpty()) JsonPrimitive("none") else JsonPrimitive("auto"),
+                functions = functions.ifEmpty { null },
+                call = call ?: JsonNull,
                 temperature = temperature,
                 topP = topP,
                 number = number,
                 stream = stream,
-                stop = stop,
+                stop = stop.ifEmpty { null },
                 maxTokens = maxTokens,
                 presencePenalty = presencePenalty,
                 frequencyPenalty = frequencyPenalty,
-                logitBias = logitBias,
+                logitBias = logitBias.ifEmpty { null },
                 user = user
             )
         }
