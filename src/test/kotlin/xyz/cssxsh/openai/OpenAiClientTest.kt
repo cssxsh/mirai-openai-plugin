@@ -43,6 +43,7 @@ internal class OpenAiClientTest {
     }
 
     @Test
+    @DisabledIfEnvironmentVariable(named = "CI", matches = "true")
     fun images(): Unit = runBlocking {
         val prompt = "风景图"
         val image = client.image.create(prompt) {
@@ -64,7 +65,7 @@ internal class OpenAiClientTest {
         val model = "gpt-3.5-turbo"
         val chat = client.chat.create(model) {
             messages {
-                user(content = "Hello!")
+                user("Hello!")
             }
         }
 
