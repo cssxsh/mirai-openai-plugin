@@ -57,7 +57,7 @@ public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
         return bind.remove(id)
     }
 
-    public fun keys(): List<String> {
+    public fun files(): List<String> {
         return folder.list { _, name -> name.endsWith(".txt") }
             ?.asList().orEmpty()
     }
