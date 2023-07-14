@@ -8,7 +8,7 @@ public data class ErrorInfo(
     @SerialName("code")
     val code: String? = null,
     @SerialName("message")
-    val message: String = "",
+    val message: JsonElement = JsonNull,
     @SerialName("param")
     val param: JsonElement = JsonNull,
     @SerialName("type")
