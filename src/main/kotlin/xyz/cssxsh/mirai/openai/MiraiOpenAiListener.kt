@@ -423,7 +423,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         if (MiraiOpenAiTokensData.economy.not()) return
         if (MiraiOpenAiConfig.permission.not() && sender.isOperator().not()) return
         if (MiraiOpenAiConfig.permission && toCommandSender().hasPermission(economy).not()) return
-        val match = """${MiraiOpenAiConfig.tokens}\s*(\d+)""".toRegex().find(message.contentToString()) ?: return
+        val match = """${MiraiOpenAiConfig.tokens}\s*(-?\d+)""".toRegex().find(message.contentToString()) ?: return
         val (quantity) = match.destructured
         val user = message.firstIsInstanceOrNull<At>()?.let { group[it.target] }
         launch {
