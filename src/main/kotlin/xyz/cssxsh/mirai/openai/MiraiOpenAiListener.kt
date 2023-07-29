@@ -48,8 +48,9 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
             is ExceptionInEventHandlerException -> {
                 logger.warning({ "MiraiOpenAiListener with ${exception.event}" }, exception.cause)
-                if (MiraiOpenAiConfig.reply && exception.event is MessageEvent) launch {
-                    val event = exception.event as MessageEvent
+                val event = exception.event as? MessageEvent ?: return
+                lock.remove(event.sender.id, event)
+                if (MiraiOpenAiConfig.reply) launch {
                     when (val cause = exception.cause) {
                         is SocketTimeoutException, is ConnectTimeoutException -> {
                             event.subject.sendMessage(event.message.quote() + "OpenAI API 超时 请重试")
@@ -94,32 +95,16 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
         when {
             content.startsWith(MiraiOpenAiConfig.completion)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(completion))
-            -> if (lock.size >= MiraiOpenAiConfig.limit) {
-                "聊天服务已开启过多，请稍后重试".toPlainText()
-            } else {
-                test(event = this)
-            }
+            -> test(event = this)
             content.startsWith(MiraiOpenAiConfig.image)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(image))
-            -> if (lock.size >= MiraiOpenAiConfig.limit) {
-                "聊天服务已开启过多，请稍后重试".toPlainText()
-            } else {
-                image(event = this)
-            }
+            -> image(event = this)
             content.startsWith(MiraiOpenAiConfig.chat)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(chat))
-            -> if (lock.size >= MiraiOpenAiConfig.limit) {
-                "聊天服务已开启过多，请稍后重试".toPlainText()
-            } else {
-                chat(event = this)
-            }
+            -> chat(event = this)
             content.startsWith(MiraiOpenAiConfig.question)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(question))
-            -> if (lock.size >= MiraiOpenAiConfig.limit) {
-                "聊天服务已开启过多，请稍后重试".toPlainText()
-            } else {
-                question(event = this)
-            }
+            -> question(event = this)
             content.startsWith(MiraiOpenAiConfig.reload)
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(reload))
             -> with(MiraiOpenAiPlugin) {
@@ -131,16 +116,18 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
             }
             message.findIsInstance<At>()?.target == bot.id && MiraiOpenAiConfig.chatByAt
                 && (MiraiOpenAiConfig.permission.not() || toCommandSender().hasPermission(chat))
-            -> if (lock.size >= MiraiOpenAiConfig.limit) {
-                "聊天服务已开启过多，请稍后重试".toPlainText()
-            } else {
-                chat(event = this)
-            }
+            -> chat(event = this)
             else -> return
         }
     }
 
     private suspend fun test(event: MessageEvent) {
+        if (lock.size >= MiraiOpenAiConfig.limit) {
+            launch {
+                event.subject.sendMessage("聊天服务已开启过多，请稍后重试".toPlainText())
+            }
+            return
+        }
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.completion)
 
@@ -164,6 +151,12 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun image(event: MessageEvent) {
+        if (lock.size >= MiraiOpenAiConfig.limit) {
+            launch {
+                event.subject.sendMessage("聊天服务已开启过多，请稍后重试".toPlainText())
+            }
+            return
+        }
         val prompt = event.message.contentToString()
             .removePrefix(MiraiOpenAiConfig.image)
 
@@ -186,6 +179,12 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun chat(event: MessageEvent) {
+        if (lock.size >= MiraiOpenAiConfig.limit) {
+            launch {
+                event.subject.sendMessage("聊天服务已开启过多，请稍后重试".toPlainText())
+            }
+            return
+        }
         if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
             launch {
                 event.subject.sendMessage(buildMessageChain {
@@ -246,7 +245,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
         }.invokeOnCompletion { cause ->
-            lock.remove(event.sender.id)
+            lock.remove(event.sender.id, event)
             when (cause) {
                 null -> Unit
                 is TimeoutCancellationException -> logger.info { "聊天已终止 ${event.sender}" }
@@ -296,6 +295,12 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
     }
 
     private suspend fun question(event: MessageEvent) {
+        if (lock.size >= MiraiOpenAiConfig.limit) {
+            launch {
+                event.subject.sendMessage("聊天服务已开启过多，请稍后重试".toPlainText())
+            }
+            return
+        }
         if (MiraiOpenAiTokensData.balance(event.sender) < 0) {
             launch {
                 event.subject.sendMessage(buildMessageChain {
@@ -355,7 +360,7 @@ internal object MiraiOpenAiListener : SimpleListenerHost() {
                 }
             }
         }.invokeOnCompletion { cause ->
-            lock.remove(event.sender.id)
+            lock.remove(event.sender.id, event)
             when (cause) {
                 null -> Unit
                 is TimeoutCancellationException -> logger.info { "问答已终止 ${event.sender}" }
