@@ -16,5 +16,7 @@ public data class CompletionInfo(
     @SerialName("object")
     val type: String = "",
     @SerialName("usage")
-    val usage: Usage = Usage()
+    val usage: Usage = Usage(),
+    @SerialName("warning")
+    val warning: String? = null
 )
