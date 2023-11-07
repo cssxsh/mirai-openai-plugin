@@ -4,7 +4,7 @@ import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.openai.completion.*
 
 @PublishedApi
-internal object QuestionConfig : ReadOnlyPluginConfig("question") {
+internal object QuestionConfig : ReadOnlyPluginConfig(saveName = "question") {
 
     @ValueName("timeout")
     @ValueDescription("等待停止时间")

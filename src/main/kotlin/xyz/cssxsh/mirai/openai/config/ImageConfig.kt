@@ -2,11 +2,10 @@ package xyz.cssxsh.mirai.openai.config
 
 import kotlinx.serialization.modules.*
 import net.mamoe.mirai.console.data.*
-import xyz.cssxsh.openai.completion.*
 import xyz.cssxsh.openai.image.*
 
 @PublishedApi
-internal object ImageConfig : ReadOnlyPluginConfig("image") {
+internal object ImageConfig : ReadOnlyPluginConfig(saveName = "image") {
 
     override val serializersModule: SerializersModule = SerializersModule {
         contextual(ImageSize.Serializer)
@@ -21,7 +20,7 @@ internal object ImageConfig : ReadOnlyPluginConfig("image") {
     val size: ImageSize by value(ImageSize.LARGE)
 
     @ValueName("format")
-    @ValueDescription("下载方式 url b64_json")
+    @ValueDescription("url / b64_json")
     val format: ImageResponseFormat by value(ImageResponseFormat.URL)
 
     fun push(builder: ImageRequest.Builder) {

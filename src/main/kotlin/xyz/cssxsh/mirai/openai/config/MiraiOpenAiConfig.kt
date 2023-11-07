@@ -1,11 +1,10 @@
 package xyz.cssxsh.mirai.openai.config
 
-import kotlinx.serialization.*
 import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.openai.*
 
 @PublishedApi
-internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClientConfig {
+internal object MiraiOpenAiConfig : ReadOnlyPluginConfig(saveName = "openai"), OpenAiClientConfig {
 
     @ValueName("proxy")
     @ValueDescription("配置时请注意单引号")
@@ -51,10 +50,6 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     @ValueDescription("聊天模型触发于@")
     val chatByAt: Boolean by value(false)
 
-    @ValueName("chat_start")
-    @ValueDescription("聊天开始提示语")
-    val chatStart: String by value("聊天将开始")
-
     @ValueName("question_prefix")
     @ValueDescription("问答模型触发前缀")
     val question: String by value("Q&A")
@@ -72,7 +67,7 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig("openai"), OpenAiClient
     val tokens: String by value("tokens")
 
     @ValueName("prompts_prefix")
-    @ValueDescription("展示 prompts 触发前缀")
+    @ValueDescription("展示 prompts 列表触发前缀")
     val prompts: String by value("prompts")
 
     @ValueName("prompts_page")

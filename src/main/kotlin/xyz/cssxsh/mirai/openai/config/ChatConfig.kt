@@ -2,10 +2,9 @@ package xyz.cssxsh.mirai.openai.config
 
 import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.openai.chat.*
-import xyz.cssxsh.openai.completion.*
 
 @PublishedApi
-internal object ChatConfig : ReadOnlyPluginConfig("chat") {
+internal object ChatConfig : ReadOnlyPluginConfig(saveName = "chat") {
 
     @ValueName("timeout")
     @ValueDescription("等待停止时间")

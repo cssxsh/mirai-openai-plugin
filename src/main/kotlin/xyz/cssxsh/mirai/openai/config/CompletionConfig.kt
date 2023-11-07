@@ -4,7 +4,7 @@ import net.mamoe.mirai.console.data.*
 import xyz.cssxsh.openai.completion.*
 
 @PublishedApi
-internal object CompletionConfig : ReadOnlyPluginConfig("completion") {
+internal object CompletionConfig : ReadOnlyPluginConfig(saveName = "completion") {
 
     @ValueName("model")
     @ValueDescription("Model")
