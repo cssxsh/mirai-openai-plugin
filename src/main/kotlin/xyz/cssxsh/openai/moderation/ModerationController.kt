@@ -13,8 +13,8 @@ public class ModerationController(private val client: OpenAiClient) {
     /**
      * [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)
      */
-    public suspend fun create(request: ModerationRequest): ModerationResult {
-        val response = client.http.post("https://api.openai.com/v1/images/generations") {
+    public suspend fun create(request: ModerationRequest): ModerationInfo {
+        val response = client.http.post("https://api.openai.com/v1/moderations") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -25,7 +25,7 @@ public class ModerationController(private val client: OpenAiClient) {
     /**
      * [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)
      */
-    public suspend fun create(input: String, model: String = "text-moderation-latest"): ModerationResult {
+    public suspend fun create(input: String, model: String = "text-moderation-latest"): ModerationInfo {
         return create(request = ModerationRequest(input = input, model = model))
     }
 }

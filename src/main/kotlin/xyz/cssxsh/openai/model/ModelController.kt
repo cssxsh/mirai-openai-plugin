@@ -29,7 +29,7 @@ public class ModelController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Delete fine-tune model](https://platform.openai.com/docs/api-reference/fine-tunes/delete-model)
+     * [Delete fine-tune model](https://platform.openai.com/docs/api-reference/models/delete)
      */
     public suspend fun cancel(model: String): ModelInfo {
         val response = client.http.delete("https://api.openai.com/v1/models/$model")
