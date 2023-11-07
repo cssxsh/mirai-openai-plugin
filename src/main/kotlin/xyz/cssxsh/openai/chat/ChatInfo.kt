@@ -18,5 +18,7 @@ public data class ChatInfo(
     @SerialName("usage")
     val usage: Usage = Usage(),
     @SerialName("warning")
-    val warning: String? = null
+    val warning: String? = null,
+    @SerialName("system_fingerprint")
+    val systemFingerprint: String? = null
 )
