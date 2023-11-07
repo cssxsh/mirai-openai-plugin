@@ -3,7 +3,6 @@ package xyz.cssxsh.mirai.openai.data
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
-import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -17,7 +16,7 @@ import net.mamoe.mirai.console.util.*
 import net.mamoe.mirai.utils.*
 import java.util.*
 
-public object MiraiOpenAiPrompts : AutoSavePluginData("prompts") {
+public object MiraiOpenAiPrompts : AutoSavePluginData(saveName = "prompts") {
 
     @ValueName("bind")
     public val bind: MutableMap<Long, String> by value()
