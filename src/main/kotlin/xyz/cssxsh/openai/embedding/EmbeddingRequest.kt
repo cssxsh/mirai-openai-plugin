@@ -4,16 +4,19 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param model [create-model](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings/create-model)
- * @param input [create-input](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings/create-input)
- * @param user [create-user](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings/create-user)
+ * @param input [embeddings-create-input](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings-create-input)
+ * @param model [embeddings-create-model](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings-create-model)
+ * @param format [embeddings-create-encoding_format](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings-create-encoding_format) float | base64
+ * @param user [embeddings-create-user](https://platform.openai.com/docs/api-reference/embeddings/create#embeddings-create-user)
  */
 @Serializable
 public data class EmbeddingRequest(
-    @SerialName("model")
-    val model: String,
     @SerialName("input")
     val input: List<String>,
+    @SerialName("model")
+    val model: String,
+    @SerialName("encoding_format")
+    val format: String = "float",
     @SerialName("user")
     val user: String = ""
 ) {
@@ -47,8 +50,8 @@ public data class EmbeddingRequest(
         public fun build(): EmbeddingRequest {
             require(input.isNotEmpty()) { "Required input" }
             return EmbeddingRequest(
-                model = model,
                 input = input,
+                model = model,
                 user = user,
             )
         }

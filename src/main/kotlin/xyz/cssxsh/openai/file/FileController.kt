@@ -53,7 +53,7 @@ public class FileController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-content)
+     * [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-contents)
      */
     public suspend fun download(fileId: String): ByteReadChannel {
         val response = client.http.get("https://api.openai.com/v1/files/${fileId}/content")

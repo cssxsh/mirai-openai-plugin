@@ -8,6 +8,7 @@ import xyz.cssxsh.openai.*
 /**
  * [Fine-tunes](https://platform.openai.com/docs/api-reference/fine-tunes)
  */
+@Deprecated("API Deprecated")
 public class FineTuneController(private val client: OpenAiClient) {
 
     /**

@@ -4,14 +4,14 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/images/create#images-create-prompt)
- * @param model [create-model](https://platform.openai.com/docs/api-reference/images/create#images-create-model) dall-e-2 / dall-e-3
- * @param number [create-n](https://platform.openai.com/docs/api-reference/images/create#images-create-n)
- * @param quality [create-quality](https://platform.openai.com/docs/api-reference/images/create#images-create-quality) standard / hd
- * @param format [create-response_format](https://platform.openai.com/docs/api-reference/images/create#images-create-response_format)
- * @param size [create-size](https://platform.openai.com/docs/api-reference/images/create#images-create-size)
- * @param style [create-style](https://platform.openai.com/docs/api-reference/images/create#images-create-style) vivid / natural
- * @param user [create-user](https://platform.openai.com/docs/api-reference/images/create#images-create-user)
+ * @param prompt [images-create-prompt](https://platform.openai.com/docs/api-reference/images/create#images-create-prompt)
+ * @param model [images-create-model](https://platform.openai.com/docs/api-reference/images/create#images-create-model) dall-e-2 | dall-e-3
+ * @param number [images-create-n](https://platform.openai.com/docs/api-reference/images/create#images-create-n)
+ * @param quality [images-create-quality](https://platform.openai.com/docs/api-reference/images/create#images-create-quality) standard | hd
+ * @param format [images-create-response_format](https://platform.openai.com/docs/api-reference/images/create#images-create-response_format)
+ * @param size [images-create-size](https://platform.openai.com/docs/api-reference/images/create#images-create-size)
+ * @param style [images-create-style](https://platform.openai.com/docs/api-reference/images/create#images-create-style) vivid | natural
+ * @param user [images-create-user](https://platform.openai.com/docs/api-reference/images/create#images-create-user)
  */
 @Serializable
 public data class ImageRequest(

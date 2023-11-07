@@ -8,6 +8,7 @@ import xyz.cssxsh.openai.*
 /**
  * [Edits](https://platform.openai.com/docs/api-reference/edits)
  */
+@Deprecated("API Deprecated")
 public class EditController(private val client: OpenAiClient) {
 
     /**

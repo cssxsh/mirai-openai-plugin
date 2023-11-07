@@ -4,18 +4,18 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param trainingFile [create-training_file](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-training_file)
- * @param validationFile [create-validation_file](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-validation_file)
- * @param model [create-model](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-model)
- * @param nEpochs [create-n_epochs](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-n_epochs)
- * @param batchSize [create-batch_size](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-batch_size)
- * @param learningRateMultiplier [create-learning_rate_multiplier](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-learning_rate_multiplier)
- * @param promptLossWeight [create-prompt_loss_weight](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-prompt_loss_weight)
- * @param computeClassificationMetrics [create-compute_classification_metrics](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-compute_classification_metrics)
- * @param classificationNClasses [create-classification_n_classes](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-classification_n_classes)
- * @param classificationPositiveClass [create-classification_positive_class](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-classification_positive_class)
- * @param classificationBetas [create-classification_betas](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-classification_betas)
- * @param suffix [create-suffix](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes/create-suffix)
+ * @param trainingFile [fine-tunes-create-training_file](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-training_file)
+ * @param validationFile [fine-tunes-create-validation_file](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-validation_file)
+ * @param model [fine-tunes-create-model](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-model)
+ * @param hyper [fine-tunes-create-hyperparameters](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-hyperparameters)
+ * @param batchSize [fine-tunes-create-batch_size](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-batch_size)
+ * @param learningRateMultiplier [fine-tunes-create-learning_rate_multiplier](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-learning_rate_multiplier)
+ * @param promptLossWeight [fine-tunes-create-prompt_loss_weight](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-prompt_loss_weight)
+ * @param computeClassificationMetrics [fine-tunes-create-compute_classification_metrics](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-compute_classification_metrics)
+ * @param classificationNClasses [fine-tunes-create-classification_n_classes](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-classification_n_classes)
+ * @param classificationPositiveClass [fine-tunes-create-classification_positive_class](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-classification_positive_class)
+ * @param classificationBetas [fine-tunes-create-classification_betas](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-classification_betas)
+ * @param suffix [fine-tunes-create-suffix](https://platform.openai.com/docs/api-reference/fine-tunes/create#fine-tunes-create-suffix)
  */
 @Serializable
 public data class FineTuneRequest(
@@ -25,8 +25,8 @@ public data class FineTuneRequest(
     val validationFile: String = "",
     @SerialName("model")
     val model: String = "curie",
-    @SerialName("n_epochs")
-    val nEpochs: Int = 4,
+    @SerialName("hyperparameters")
+    val hyper: Hyperparams? = null,
     @SerialName("batch_size")
     val batchSize: Int? = null,
     @SerialName("learning_rate_multiplier")
@@ -143,7 +143,7 @@ public data class FineTuneRequest(
                 trainingFile = trainingFile,
                 validationFile = validationFile,
                 model = model,
-                nEpochs = nEpochs,
+                hyper = Hyperparams(nEpochs = nEpochs),
                 batchSize = batchSize,
                 learningRateMultiplier = learningRateMultiplier,
                 promptLossWeight = promptLossWeight,
