@@ -5,20 +5,23 @@ import kotlinx.serialization.json.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param model [create-model](https://platform.openai.com/docs/api-reference/chat/create#chat/create-model)
- * @param messages [create-messages](https://platform.openai.com/docs/api-reference/chat/create#chat/create-messages)
- * @param functions [create-functions](https://platform.openai.com/docs/api-reference/chat/create#chat/create-functions)
- * @param call [create-function_call](https://platform.openai.com/docs/api-reference/chat/create#chat/create-function_call)
- * @param temperature [create-temperature](https://platform.openai.com/docs/api-reference/chat/create#chat/create-temperature)
- * @param topP [create-top_p](https://platform.openai.com/docs/api-reference/chat/create#chat/create-top_p)
- * @param number [create-n](https://platform.openai.com/docs/api-reference/chat/create#chat/create-n)
- * @param stream [create-stream](https://platform.openai.com/docs/api-reference/chat/create#chat/create-stream)
- * @param stop [create-stop](https://platform.openai.com/docs/api-reference/chat/create#chat/create-stop)
- * @param maxTokens [create-max_tokens](https://platform.openai.com/docs/api-reference/chat/create#chat/create-max_tokens)
- * @param presencePenalty [create-presence_penalty](https://platform.openai.com/docs/api-reference/chat/create#chat/create-presence_penalty)
- * @param frequencyPenalty [create-frequency_penalty](https://platform.openai.com/docs/api-reference/chat/create#chat/create-frequency_penalty)
- * @param logitBias [create-logit_bias](https://platform.openai.com/docs/api-reference/chat/create#chat/create-logit_bias)
- * @param user [create-user](https://platform.openai.com/docs/api-reference/chat/create#chat/create-user)
+ * @param messages [chat-create-messages](https://platform.openai.com/docs/api-reference/chat/create#chat-create-messages)
+ * @param model [chat-create-model](https://platform.openai.com/docs/api-reference/chat/create#chat-create-model)
+ * @param frequencyPenalty [chat-create-frequency_penalty](https://platform.openai.com/docs/api-reference/chat/create#chat-create-frequency_penalty)
+ * @param logitBias [chat-create-logit_bias](https://platform.openai.com/docs/api-reference/chat/create#chat-create-logit_bias)
+ * @param maxTokens [chat-create-max_tokens](https://platform.openai.com/docs/api-reference/chat/create#chat-create-max_tokens)
+ * @param number [chat-create-n](https://platform.openai.com/docs/api-reference/chat/create#chat-create-n)
+ * @param presencePenalty [chat-create-presence_penalty](https://platform.openai.com/docs/api-reference/chat/create#chat-create-presence_penalty)
+ * @param seed [chat-create-seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed)
+ * @param stop [chat-create-stop](https://platform.openai.com/docs/api-reference/chat/create#chat-create-stop)
+ * @param stream [chat-create-stream](https://platform.openai.com/docs/api-reference/chat/create#chat-create-stream)
+ * @param temperature [chat-create-temperature](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)
+ * @param topP [chat-create-top_p](https://platform.openai.com/docs/api-reference/chat/create#chat-create-top_p)
+ * @param tools [chat-create-tools](https://platform.openai.com/docs/api-reference/chat/create#chat-create-tools)
+ * @param choice [chat-create-tool_choice](https://platform.openai.com/docs/api-reference/chat/create#chat-create-tool_choice)
+ * @param user [chat-create-user](https://platform.openai.com/docs/api-reference/chat/create#chat-create-user)
+ * @param call [chat-create-function_call](https://platform.openai.com/docs/api-reference/chat/create#chat-create-function_call)
+ * @param functions [chat-create-functions](https://platform.openai.com/docs/api-reference/chat/create#chat-create-functions)
  */
 @Serializable
 public data class ChatRequest(
@@ -26,16 +29,18 @@ public data class ChatRequest(
     val model: String,
     @SerialName("messages")
     val messages: List<ChoiceMessage>,
-    @SerialName("functions")
-    val functions: List<ChoiceFunction>? = null,
-    @SerialName("function_call")
-    val call: JsonElement = JsonNull,
+    @SerialName("tools")
+    val tools: List<ChoiceTool>? = null,
+    @SerialName("tool_choice")
+    val choice: JsonElement = JsonNull,
     @SerialName("temperature")
     val temperature: Double = 1.0,
     @SerialName("top_p")
     val topP: Double = 1.0,
     @SerialName("n")
     val number: Int = 1,
+    @SerialName("seed")
+    val seed: Int? = null,
     @SerialName("stream")
     val stream: Boolean = false,
     @SerialName("stop")
@@ -49,7 +54,13 @@ public data class ChatRequest(
     @SerialName("logit_bias")
     val logitBias: Map<String, Int>? = null,
     @SerialName("user")
-    val user: String = ""
+    val user: String = "",
+    @SerialName("functions")
+    @Deprecated("Deprecated in favor of tools.")
+    val functions: List<ChoiceFunction>? = null,
+    @SerialName("function_call")
+    @Deprecated("Deprecated in favor of tool_choice.")
+    val call: JsonElement = JsonNull,
 ) {
     public class Builder(@property:OpenAiDsl public var model: String) {
         @OpenAiDsl
@@ -91,22 +102,23 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
+        @Deprecated("Deprecated in favor of tools.")
         public var functions: List<ChoiceFunction> = emptyList()
 
         @OpenAiDsl
         public fun functions(values: List<ChoiceFunction>): Builder = apply {
-            functions = values
+            tools {
+                for (function in values) {
+                    add(ChoiceTool(type = "function", function = function))
+                }
+            }
         }
 
         @OpenAiDsl
-        public fun functions(vararg values: ChoiceFunction): Builder = apply {
-            functions = values.asList()
-        }
+        public fun functions(vararg values: ChoiceFunction): Builder = functions(values = values.asList())
 
         @OpenAiDsl
-        public fun functions(block: MutableList<ChoiceFunction>.() -> Unit): Builder = apply {
-            functions = buildList(block)
-        }
+        public fun functions(block: MutableList<ChoiceFunction>.() -> Unit): Builder = functions(values = buildList(block))
 
         @OpenAiDsl
         public fun MutableList<ChoiceFunction>.define(
@@ -124,6 +136,7 @@ public data class ChatRequest(
         }
 
         @OpenAiDsl
+        @Deprecated("Deprecated in favor of tool_choice.")
         public var call: JsonObject? = null
 
         @OpenAiDsl
@@ -133,7 +146,10 @@ public data class ChatRequest(
 
         @OpenAiDsl
         public fun call(block: JsonObjectBuilder.() -> Unit): Builder = apply {
-            call = buildJsonObject(block)
+            choice = buildJsonObject {
+                put("type", "function")
+                putJsonObject("function", block)
+            }
         }
 
         @OpenAiDsl
@@ -235,6 +251,23 @@ public data class ChatRequest(
             user = value
         }
 
+
+        @OpenAiDsl
+        public var tools: List<ChoiceTool> = emptyList()
+
+        @OpenAiDsl
+        public fun tools(block: MutableList<ChoiceTool>.() -> Unit): Builder = apply {
+            tools = buildList(block)
+        }
+
+        @OpenAiDsl
+        public var choice: JsonElement = JsonNull
+
+        @OpenAiDsl
+        public fun choice(block: JsonObjectBuilder.() -> Unit): Builder = apply {
+            choice = buildJsonObject(block)
+        }
+
         public fun build(): ChatRequest {
             check(messages.isEmpty().not()) { "Required messages" }
             return ChatRequest(
@@ -251,7 +284,9 @@ public data class ChatRequest(
                 presencePenalty = presencePenalty,
                 frequencyPenalty = frequencyPenalty,
                 logitBias = logitBias.ifEmpty { null },
-                user = user
+                user = user,
+                tools = tools,
+                choice = choice,
             )
         }
     }

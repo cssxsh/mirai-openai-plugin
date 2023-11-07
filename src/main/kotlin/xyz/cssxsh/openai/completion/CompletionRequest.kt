@@ -4,22 +4,23 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param model [create-model](https://platform.openai.com/docs/api-reference/completions/create#completions/create-model)
- * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/completions/create#completions/create-prompt)
- * @param suffix [create-suffix](https://platform.openai.com/docs/api-reference/completions/create#completions/create-suffix)
- * @param maxTokens [create-max_tokens](https://platform.openai.com/docs/api-reference/completions/create#completions/create-max_tokens)
- * @param temperature [create-temperature](https://platform.openai.com/docs/api-reference/completions/create#completions/create-temperature)
- * @param topP [create-top_p](https://platform.openai.com/docs/api-reference/completions/create#completions/create-top_p)
- * @param number [create-n](https://platform.openai.com/docs/api-reference/completions/create#completions/create-n)
- * @param stream [create-stream](https://platform.openai.com/docs/api-reference/completions/create#completions/create-stream)
- * @param logprobs [create-logprobs](https://platform.openai.com/docs/api-reference/completions/create#completions/create-logprobs)
- * @param echo [create-echo](https://platform.openai.com/docs/api-reference/completions/create#completions/create-echo)
- * @param stop [create-stop](https://platform.openai.com/docs/api-reference/completions/create#completions/create-stop)
- * @param presencePenalty [create-presence_penalty](https://platform.openai.com/docs/api-reference/completions/create#completions/create-presence_penalty)
- * @param frequencyPenalty [create-frequency_penalty](https://platform.openai.com/docs/api-reference/completions/create#completions/create-frequency_penalty)
- * @param bestOf [create-best_of](https://platform.openai.com/docs/api-reference/completions/create#completions/create-best_of)
- * @param logitBias [create-logit_bias](https://platform.openai.com/docs/api-reference/completions/create#completions/create-logit_bias)
- * @param user [create-user](https://platform.openai.com/docs/api-reference/completions/create#completions/create-user)
+ * @param model [completions-create-model](https://platform.openai.com/docs/api-reference/completions/create#completions-create-model)
+ * @param prompt [completions-create-prompt](https://platform.openai.com/docs/api-reference/completions/create#completions-create-prompt)
+ * @param suffix [completions-create-suffix](https://platform.openai.com/docs/api-reference/completions/create#completions-create-suffix)
+ * @param maxTokens [completions-create-max_tokens](https://platform.openai.com/docs/api-reference/completions/create#completions-create-max_tokens)
+ * @param temperature [completions-create-temperature](https://platform.openai.com/docs/api-reference/completions/create#completions-create-temperature)
+ * @param topP [completions-create-top_p](https://platform.openai.com/docs/api-reference/completions/create#completions-create-top_p)
+ * @param seed [completions-create-seed](https://platform.openai.com/docs/api-reference/completions/create#completions-create-seed)
+ * @param number [completions-create-n](https://platform.openai.com/docs/api-reference/completions/create#completions-create-n)
+ * @param stream [completions-create-stream](https://platform.openai.com/docs/api-reference/completions/create#completions-create-stream)
+ * @param logprobs [completions-create-logprobs](https://platform.openai.com/docs/api-reference/completions/create#completions-create-logprobs)
+ * @param echo [completions-create-echo](https://platform.openai.com/docs/api-reference/completions/create#completions-create-echo)
+ * @param stop [completions-create-stop](https://platform.openai.com/docs/api-reference/completions/create#completions-create-stop)
+ * @param presencePenalty [completions-create-presence_penalty](https://platform.openai.com/docs/api-reference/completions/create#completions-create-presence_penalty)
+ * @param frequencyPenalty [completions-create-frequency_penalty](https://platform.openai.com/docs/api-reference/completions/create#completions-create-frequency_penalty)
+ * @param bestOf [completions-create-best_of](https://platform.openai.com/docs/api-reference/completions/create#completions-create-best_of)
+ * @param logitBias [completions-create-logit_bias](https://platform.openai.com/docs/api-reference/completions/create#completions-create-logit_bias)
+ * @param user [completions-create-user](https://platform.openai.com/docs/api-reference/completions/create#completions-create-user)
  */
 @Serializable
 public data class CompletionRequest(
@@ -37,6 +38,8 @@ public data class CompletionRequest(
     val topP: Double = 1.0,
     @SerialName("n")
     val number: Int = 1,
+    @SerialName("seed")
+    val seed: Int? = null,
     @SerialName("stream")
     val stream: Boolean = false,
     @SerialName("logprobs")
@@ -113,6 +116,14 @@ public data class CompletionRequest(
         @OpenAiDsl
         public fun number(value: Int): Builder = apply {
             number = value
+        }
+
+        @OpenAiDsl
+        public var seed: Int? = null
+
+        @OpenAiDsl
+        public fun seed(value: Int?): Builder = apply {
+            seed = value
         }
 
         @OpenAiDsl
@@ -206,6 +217,7 @@ public data class CompletionRequest(
                 temperature = temperature,
                 topP = topP,
                 number = number,
+                seed = seed,
                 stream = stream,
                 logprobs = logprobs,
                 echo = echo,
