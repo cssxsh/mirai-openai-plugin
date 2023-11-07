@@ -5,16 +5,14 @@ import xyz.cssxsh.openai.*
 import java.util.*
 
 /**
- * @param file [create-file](https://platform.openai.com/docs/api-reference/audio/create#audio/create-file)
- * @param model [create-model](https://platform.openai.com/docs/api-reference/audio/create#audio/create-model)
- * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/audio/create#audio/create-prompt)
- * @param format [create-response_format](https://platform.openai.com/docs/api-reference/audio/create#audio/create-response_format)
- * @param temperature [create-temperature](https://platform.openai.com/docs/api-reference/audio/create#audio/create-temperature)
+ * @param model [audio-createTranscription-model](https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-model)
+ * @param language [audio-createTranscription-language](https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-language)
+ * @param prompt [audio-createTranscription-prompt](https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-prompt)
+ * @param format [audio-createTranscription-response_format](https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-response_format)
+ * @param temperature [audio-createTranscription-temperature](https://platform.openai.com/docs/api-reference/audio/createTranscription#audio-createtranscription-temperature)
  */
 @Serializable
-public data class AudioRequest(
-    @SerialName("file")
-    val file: String,
+public data class TranscriptionRequest(
     @SerialName("model")
     val model: String,
     @SerialName("prompt")
@@ -26,11 +24,7 @@ public data class AudioRequest(
     @SerialName("language")
     val language: String = Locale.getDefault().language
 ) {
-    public class Builder(@property:OpenAiDsl public var file: String, @property:OpenAiDsl public var model: String) {
-        @OpenAiDsl
-        public fun file(value: String): Builder = apply {
-            file = value
-        }
+    public class Builder(@property:OpenAiDsl public var model: String) {
 
         @OpenAiDsl
         public fun model(value: String): Builder = apply {
@@ -66,9 +60,8 @@ public data class AudioRequest(
             language = locale.language
         }
 
-        public fun build(): AudioRequest {
-            return AudioRequest(
-                file = file,
+        public fun build(): TranscriptionRequest {
+            return TranscriptionRequest(
                 model = model,
                 format = format,
                 temperature = temperature,
