@@ -6,6 +6,8 @@ import kotlinx.serialization.encoding.*
 
 @Serializable(ImageSize.Serializer::class)
 public enum class ImageSize(public val text: String) {
+    LARGE_WIDTH("1792x1024"),
+    LARGE_HEIGHT("1024x1792"),
     LARGE("1024x1024"),
     MIDDLE("512x512"),
     SMALL("256x256");

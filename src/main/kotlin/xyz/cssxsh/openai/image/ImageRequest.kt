@@ -4,22 +4,31 @@ import kotlinx.serialization.*
 import xyz.cssxsh.openai.*
 
 /**
- * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/images/create#images/create-prompt)
- * @param number [create-input](https://platform.openai.com/docs/api-reference/images/create#images/create-n)
- * @param size [create-size](https://platform.openai.com/docs/api-reference/images/create#images/create-size)
- * @param format [create-response_format](https://platform.openai.com/docs/api-reference/images/create#images/create-response_format)
- * @param user [create-user](https://platform.openai.com/docs/api-reference/images/create#images/create-user)
+ * @param prompt [create-prompt](https://platform.openai.com/docs/api-reference/images/create#images-create-prompt)
+ * @param model [create-model](https://platform.openai.com/docs/api-reference/images/create#images-create-model) dall-e-2 / dall-e-3
+ * @param number [create-n](https://platform.openai.com/docs/api-reference/images/create#images-create-n)
+ * @param quality [create-quality](https://platform.openai.com/docs/api-reference/images/create#images-create-quality) standard / hd
+ * @param format [create-response_format](https://platform.openai.com/docs/api-reference/images/create#images-create-response_format)
+ * @param size [create-size](https://platform.openai.com/docs/api-reference/images/create#images-create-size)
+ * @param style [create-style](https://platform.openai.com/docs/api-reference/images/create#images-create-style) vivid / natural
+ * @param user [create-user](https://platform.openai.com/docs/api-reference/images/create#images-create-user)
  */
 @Serializable
 public data class ImageRequest(
     @SerialName("prompt")
     val prompt: String,
+    @SerialName("model")
+    val model: String = "dall-e-2",
     @SerialName("n")
     val number: Int = 1,
-    @SerialName("size")
-    val size: ImageSize = ImageSize.LARGE,
+    @SerialName("quality")
+    val quality: String = "standard",
     @SerialName("response_format")
     val format: ImageResponseFormat = ImageResponseFormat.URL,
+    @SerialName("size")
+    val size: ImageSize = ImageSize.LARGE,
+    @SerialName("style")
+    val style: String? = "vivid",
     @SerialName("user")
     val user: String = ""
 ) {

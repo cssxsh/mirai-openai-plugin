@@ -31,13 +31,14 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
+     * [Create image edit](https://platform.openai.com/docs/api-reference/images/createEdit)
      */
     public suspend fun createEdit(image: InputProvider, mask: InputProvider? = null, request: ImageRequest): ImageInfo {
         val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/edits", formData {
             append("image", image)
-            if (mask != null) append("mask", mask)
             append("prompt", request.prompt)
+            if (mask != null) append("mask", mask)
+            append("model", request.model)
             append("n", request.number)
             append("size", request.size.text)
             append("response_format", request.format.name.lowercase())
@@ -48,7 +49,7 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
+     * [Create image edit](https://platform.openai.com/docs/api-reference/images/createEdit)
      */
     public suspend fun createEdit(
         image: InputProvider,
@@ -64,14 +65,15 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
+     * [Create image variation](https://platform.openai.com/docs/api-reference/images/createVariation)
      */
     public suspend fun createVariation(image: InputProvider, request: ImageRequest): ImageInfo {
         val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/variations", formData {
             append("image", image)
+            append("model", request.model)
             append("n", request.number)
-            append("size", request.size.text)
             append("response_format", request.format.name.lowercase())
+            append("size", request.size.text)
             if (request.user.isNotEmpty()) append("user", request.user)
         })
 
@@ -79,7 +81,7 @@ public class ImageController(private val client: OpenAiClient) {
     }
 
     /**
-     * [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
+     * [Create image variation](https://platform.openai.com/docs/api-reference/images/createVariation)
      */
     public suspend fun createVariation(
         image: InputProvider,
