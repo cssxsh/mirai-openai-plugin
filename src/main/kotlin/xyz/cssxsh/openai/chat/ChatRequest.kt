@@ -251,7 +251,6 @@ public data class ChatRequest(
             user = value
         }
 
-
         @OpenAiDsl
         public var tools: List<ChoiceTool> = emptyList()
 
@@ -285,7 +284,7 @@ public data class ChatRequest(
                 frequencyPenalty = frequencyPenalty,
                 logitBias = logitBias.ifEmpty { null },
                 user = user,
-                tools = tools,
+                tools = tools.ifEmpty { null },
                 choice = choice,
             )
         }
