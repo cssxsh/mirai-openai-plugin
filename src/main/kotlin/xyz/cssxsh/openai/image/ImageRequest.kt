@@ -70,6 +70,13 @@ public data class ImageRequest(
             user = value
         }
 
+        @OpenAiDsl
+        public var model: String = "dall-e-2"
+
+        @OpenAiDsl
+        public fun model(value: String): Builder = apply {
+            model = value
+        }
         public fun build(): ImageRequest {
             require(number in 1..10) { "Must be between 1 and 10" }
             return ImageRequest(
@@ -78,6 +85,7 @@ public data class ImageRequest(
                 size = size,
                 format = format,
                 user = user,
+                model = model,
             )
         }
     }
