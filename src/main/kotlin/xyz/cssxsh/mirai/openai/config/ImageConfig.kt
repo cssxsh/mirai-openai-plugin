@@ -23,9 +23,14 @@ internal object ImageConfig : ReadOnlyPluginConfig(saveName = "image") {
     @ValueDescription("url / b64_json")
     val format: ImageResponseFormat by value(ImageResponseFormat.URL)
 
+    @ValueName("model")
+    @ValueDescription("dall-e-2 | dall-e-3")
+    val model: String by value("dall-e-2")
+
     fun push(builder: ImageRequest.Builder) {
         builder.number = number
         builder.size = size
         builder.format = format
+        builder.model = model
     }
 }
