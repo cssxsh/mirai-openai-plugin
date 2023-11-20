@@ -77,8 +77,11 @@ public data class ImageRequest(
         public fun model(value: String): Builder = apply {
             model = value
         }
+
         public fun build(): ImageRequest {
             require(number in 1..10) { "Must be between 1 and 10" }
+            // 这里添加对模型和尺寸的检查
+            validateSizeForModel(model, size)
             return ImageRequest(
                 prompt = prompt,
                 number = number,
@@ -88,5 +91,20 @@ public data class ImageRequest(
                 model = model,
             )
         }
+
+        private fun validateSizeForModel(model: String, size: ImageSize) {
+            when (model) {
+                "dall-e-2" -> require(size in listOf(ImageSize.SMALL, ImageSize.MIDDLE, ImageSize.LARGE)) {
+                    "dall-e-2 model requires one of the sizes: SMALL (256x256), MIDDLE (512x512), or LARGE (1024x1024)"
+                }
+
+                "dall-e-3" -> require(size in listOf(ImageSize.LARGE, ImageSize.LARGE_WIDTH, ImageSize.LARGE_HEIGHT)) {
+                    "dall-e-3 model requires one of the sizes: LARGE (1024x1024), LARGE_WIDTH (1792x1024), or LARGE_HEIGHT (1024x1792)"
+                }
+
+                else -> throw IllegalArgumentException("Unsupported model: $model")
+            }
+        }
+
     }
 }
