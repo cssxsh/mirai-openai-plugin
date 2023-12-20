@@ -15,7 +15,7 @@ public class ImageController(private val client: OpenAiClient) {
      * [Create image](https://platform.openai.com/docs/api-reference/images/create)
      */
     public suspend fun create(request: ImageRequest): ImageInfo {
-        val response = client.http.post("https://api.openai.com/v1/images/generations") {
+        val response = client.http.post("${client.config.api}/images/generations") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -34,7 +34,7 @@ public class ImageController(private val client: OpenAiClient) {
      * [Create image edit](https://platform.openai.com/docs/api-reference/images/createEdit)
      */
     public suspend fun createEdit(image: InputProvider, mask: InputProvider? = null, request: ImageRequest): ImageInfo {
-        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/edits", formData {
+        val response = client.http.submitFormWithBinaryData("${client.config.api}/images/edits", formData {
             append("image", image)
             append("prompt", request.prompt)
             if (mask != null) append("mask", mask)
@@ -68,7 +68,7 @@ public class ImageController(private val client: OpenAiClient) {
      * [Create image variation](https://platform.openai.com/docs/api-reference/images/createVariation)
      */
     public suspend fun createVariation(image: InputProvider, request: ImageRequest): ImageInfo {
-        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/images/variations", formData {
+        val response = client.http.submitFormWithBinaryData("${client.config.api}/images/variations", formData {
             append("image", image)
             append("model", request.model)
             append("n", request.number)
