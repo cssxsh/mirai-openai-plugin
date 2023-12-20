@@ -16,7 +16,7 @@ public class FileController(private val client: OpenAiClient) {
      * [List files](https://platform.openai.com/docs/api-reference/files/list)
      */
     public suspend fun list(): List<FileInfo> {
-        val response = client.http.get("https://api.openai.com/v1/files")
+        val response = client.http.get("${client.config.api}/files")
         val body = response.body<ListWrapper<FileInfo>>()
 
         return body.data
@@ -26,7 +26,7 @@ public class FileController(private val client: OpenAiClient) {
      * [Upload file](https://platform.openai.com/docs/api-reference/files/upload)
      */
     public suspend fun create(file: InputProvider, purpose: String): FileInfo {
-        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/files", formData {
+        val response = client.http.submitFormWithBinaryData("${client.config.api}/files", formData {
             append("file", file)
             append("purpose", purpose)
         })
@@ -38,7 +38,7 @@ public class FileController(private val client: OpenAiClient) {
      * [Delete file](https://platform.openai.com/docs/api-reference/files/delete)
      */
     public suspend fun delete(fileId: String): FileInfo {
-        val response = client.http.delete("https://api.openai.com/v1/files/${fileId}")
+        val response = client.http.delete("${client.config.api}/files/${fileId}")
 
         return response.body()
     }
@@ -47,7 +47,7 @@ public class FileController(private val client: OpenAiClient) {
      * [Retrieve file](https://platform.openai.com/docs/api-reference/files/retrieve)
      */
     public suspend fun retrieve(fileId: String): FileInfo {
-        val response = client.http.get("https://api.openai.com/v1/files/${fileId}")
+        val response = client.http.get("${client.config.api}/files/${fileId}")
 
         return response.body()
     }
@@ -56,7 +56,7 @@ public class FileController(private val client: OpenAiClient) {
      * [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-contents)
      */
     public suspend fun download(fileId: String): ByteReadChannel {
-        val response = client.http.get("https://api.openai.com/v1/files/${fileId}/content")
+        val response = client.http.get("${client.config.api}/files/${fileId}/content")
 
         return response.bodyAsChannel()
     }

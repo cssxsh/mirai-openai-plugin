@@ -10,12 +10,13 @@ import xyz.cssxsh.openai.*
  * @since 1.2.0
  */
 public class ChatController(private val client: OpenAiClient) {
+    public val url: String = "${client.config.api}/chat/completions"
 
     /**
      * [Create chat completion](https://platform.openai.com/docs/api-reference/chat/create)
      */
     public suspend fun create(request: ChatRequest): ChatInfo {
-        val response = client.http.post("https://api.openai.com/v1/chat/completions") {
+        val response = client.http.post(url) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }

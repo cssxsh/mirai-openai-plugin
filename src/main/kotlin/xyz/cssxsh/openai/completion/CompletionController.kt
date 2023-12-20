@@ -9,12 +9,13 @@ import xyz.cssxsh.openai.*
  * [Completions](https://platform.openai.com/docs/api-reference/completions)
  */
 public class CompletionController(private val client: OpenAiClient) {
+    public val url: String = "${client.config.api}/completions"
 
     /**
      * [Create completion](https://platform.openai.com/docs/api-reference/completions/create)
      */
     public suspend fun create(request: CompletionRequest): CompletionInfo {
-        val response = client.http.post("https://api.openai.com/v1/completions") {
+        val response = client.http.post(url) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }

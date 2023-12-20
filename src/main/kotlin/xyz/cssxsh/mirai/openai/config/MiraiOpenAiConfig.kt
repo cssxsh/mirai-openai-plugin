@@ -22,6 +22,10 @@ internal object MiraiOpenAiConfig : ReadOnlyPluginConfig(saveName = "openai"), O
     @ValueDescription("API 超时时间, 如果出现 TimeoutException 时, 请尝试调大")
     override val timeout: Long by value(30_000L)
 
+    @ValueName("api")
+    @ValueDescription("API 地址")
+    override val api: String by value("https://api.openai.com/v1")
+
     @ValueName("token")
     @ValueDescription("OPENAI_TOKEN https://platform.openai.com/account/api-keys")
     override val token: String by value(System.getenv("OPENAI_TOKEN").orEmpty())

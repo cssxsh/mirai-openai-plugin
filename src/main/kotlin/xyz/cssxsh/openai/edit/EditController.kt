@@ -10,12 +10,13 @@ import xyz.cssxsh.openai.*
  */
 @Deprecated("API Deprecated")
 public class EditController(private val client: OpenAiClient) {
+    public val url: String = "${client.config.api}/edits"
 
     /**
      * [Create edit](https://platform.openai.com/docs/api-reference/edits/create)
      */
     public suspend fun create(request: EditRequest): EditInfo {
-        val response = client.http.post("https://api.openai.com/v1/edits") {
+        val response = client.http.post(url) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }

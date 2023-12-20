@@ -9,12 +9,13 @@ import xyz.cssxsh.openai.*
  * [Moderations](https://platform.openai.com/docs/api-reference/moderations)
  */
 public class ModerationController(private val client: OpenAiClient) {
+    public val url: String = "${client.config.api}/moderations"
 
     /**
      * [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)
      */
     public suspend fun create(request: ModerationRequest): ModerationInfo {
-        val response = client.http.post("https://api.openai.com/v1/moderations") {
+        val response = client.http.post(url) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }

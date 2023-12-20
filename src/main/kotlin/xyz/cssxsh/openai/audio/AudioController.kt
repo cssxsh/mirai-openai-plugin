@@ -10,12 +10,11 @@ import xyz.cssxsh.openai.*
  * [Audio](https://platform.openai.com/docs/api-reference/audio)
  */
 public class AudioController(private val client: OpenAiClient) {
-
     /**
      * [Create speech](https://platform.openai.com/docs/api-reference/audio/createSpeech)
      */
     public suspend fun speech(request: SpeechRequest): ByteArray {
-        val response = client.http.post("https://api.openai.com/v1/audio/speech") {
+        val response = client.http.post("${client.config.api}/audio/speech") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
@@ -27,7 +26,7 @@ public class AudioController(private val client: OpenAiClient) {
      * [Create transcription](https://platform.openai.com/docs/api-reference/audio/createTranscription)
      */
     public suspend fun transcription(file: ByteArray, request: TranscriptionRequest): AudioInfo {
-        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/audio/transcriptions", formData {
+        val response = client.http.submitFormWithBinaryData("${client.config.api}/audio/transcriptions", formData {
             append("file", file)
             append("model", request.model)
             append("language", request.language)
@@ -54,7 +53,7 @@ public class AudioController(private val client: OpenAiClient) {
      * [Create translation](https://platform.openai.com/docs/api-reference/audio/createTranslation)
      */
     public suspend fun translation(file: ByteArray, request: TranscriptionRequest): AudioInfo {
-        val response = client.http.submitFormWithBinaryData("https://api.openai.com/v1/audio/translations", formData {
+        val response = client.http.submitFormWithBinaryData("${client.config.api}/audio/translations", formData {
             append("file", file)
             append("model", request.model)
             append("prompt", request.prompt)

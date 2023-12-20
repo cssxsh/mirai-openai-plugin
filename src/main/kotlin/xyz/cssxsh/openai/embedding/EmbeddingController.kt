@@ -9,12 +9,13 @@ import xyz.cssxsh.openai.*
  * [Embeddings](https://platform.openai.com/docs/api-reference/embeddings)
  */
 public class EmbeddingController(private val client: OpenAiClient) {
+    public val url: String = "${client.config.api}/embeddings"
 
     /**
      * [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
      */
     public suspend fun create(request: EmbeddingRequest): List<EmbeddingInfo> {
-        val response = client.http.post("https://api.openai.com/v1/embeddings") {
+        val response = client.http.post(url) {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
